@@ -1,0 +1,514 @@
+{
+  "project": {
+    "title": "Elyx Health Journey - Complete 8-Month Timeline",
+    "description": "8-Month Health Transformation: From Onboarding to Optimization",
+    "duration": "32 weeks",
+    "member": "Rohan"
+  },
+  "summary_stats": {
+    "total_messages": 1247,
+    "doctor_hours": 38.5,
+    "coach_hours": 52.8,
+    "average_adherence": "67%",
+    "total_weight_loss": "-9.2kg",
+    "final_hba1c": "5.1%",
+    "weeks_tracked": 32,
+    "workout_sessions": 156,
+    "travel_trips": 12,
+    "diagnostic_tests": 8,
+    "plan_adjustments": 24,
+    "final_bp": "118/75"
+  },
+  "team_members": {
+    "ruby_concierge": {
+      "name": "Ruby",
+      "role": "Concierge",
+      "color_code": "#9b59b6",
+      "responsibilities": ["Care coordination", "Travel planning", "Service management"]
+    },
+    "dr_warren": {
+      "name": "Dr. Warren",
+      "role": "Primary Physician",
+      "color_code": "#e74c3c",
+      "responsibilities": ["Medical oversight", "Lab interpretation", "Medication management"]
+    },
+    "advik_scientist": {
+      "name": "Advik",
+      "role": "Performance Scientist",
+      "color_code": "#1abc9c",
+      "responsibilities": ["Data analysis", "Wearable insights", "Performance optimization"]
+    },
+    "carla_nutritionist": {
+      "name": "Carla",
+      "role": "Nutritionist",
+      "color_code": "#f39c12",
+      "responsibilities": ["Meal planning", "Nutrition coaching", "Dietary adjustments"]
+    },
+    "rachel_pt": {
+      "name": "Rachel",
+      "role": "Personal Trainer",
+      "color_code": "#3498db",
+      "responsibilities": ["Workout design", "Form coaching", "Fitness progression"]
+    },
+    "neel_rm": {
+      "name": "Neel",
+      "role": "Relationship Manager",
+      "color_code": "#34495e",
+      "responsibilities": ["Overall journey management", "Final assessments"]
+    }
+  },
+  "conversations_by_week": {
+    "week_1": {
+      "date_range": "Jan 1-7",
+      "phase": "Month 1: Onboarding & Foundation Building",
+      "messages": [
+        {
+          "sender": "Ruby (Concierge)",
+          "role": "concierge",
+          "message": "Hi Rohan! 👋 Welcome to Elyx! I'm Ruby, your dedicated concierge. I'll be coordinating your healthcare journey. Are you ready to get started?",
+          "time": "09:00",
+          "date": "Jan 1",
+          "type": "onboarding"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Hi Ruby! Yes, absolutely. I'm excited to finally prioritize my health properly.",
+          "time": "09:15",
+          "date": "Jan 1"
+        },
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "Hello Rohan, I'm Dr. Warren, your primary physician at Elyx. Let's start with your medical history. Any current medications or chronic conditions?",
+          "time": "10:00",
+          "date": "Jan 2",
+          "type": "medical"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Hi Doctor. I'm pre-diabetic (HbA1c was 6.2 last check). Taking metformin 500mg daily. Family history of diabetes and hypertension.",
+          "time": "10:30",
+          "date": "Jan 2"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Hello Rohan, I'm Advik, your performance scientist. I'll be analyzing your wearable data, sleep patterns, and stress metrics. Have you been using any fitness tracking devices? I need baseline data to establish your performance profile.",
+          "time": "14:00",
+          "date": "Jan 3",
+          "type": "data"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Hi Advik! I have a Garmin Fenix 7 that I wear daily. Sleep has been poor lately - averaging 5.5-6 hours with lots of wake-ups.",
+          "time": "14:15",
+          "date": "Jan 3"
+        },
+        {
+          "sender": "Ruby (Concierge)",
+          "role": "concierge",
+          "message": "Your comprehensive health assessment is scheduled for Thursday 8 AM at Elyx Diagnostics, Bandra. 12-hour fasting required.",
+          "time": "16:00",
+          "date": "Jan 5"
+        }
+      ]
+    },
+    "week_2": {
+      "date_range": "Jan 8-14",
+      "phase": "Month 1: Onboarding & Foundation Building",
+      "messages": [
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "Hi Rohan, just reviewed your results. Overall good news! HbA1c is 6.1 (improvement!), but we need to address vitamin D deficiency and slightly elevated cholesterol.",
+          "time": "14:30",
+          "date": "Jan 8",
+          "type": "results"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Week 1 wearable analysis complete. Key findings: Average RHR 72 bpm (slightly elevated), sleep efficiency 68% (concerning), deep sleep only 14% of total sleep time. Stress score averaging 65/100. We need immediate sleep hygiene intervention.",
+          "time": "15:00",
+          "date": "Jan 8",
+          "type": "data"
+        },
+        {
+          "sender": "Carla (Nutritionist)",
+          "role": "nutritionist",
+          "message": "Hi Rohan! I'm Carla, your nutritionist. Dr. Warren shared your results. Let's work on a travel-friendly meal plan. What's your current eating pattern?",
+          "time": "10:00",
+          "date": "Jan 9"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Hi Carla! Honestly, it's erratic. Lots of client dinners, airport food, irregular timings. I skip breakfast often. @Advik - those sleep numbers are alarming but accurate.",
+          "time": "10:30",
+          "date": "Jan 9"
+        },
+        {
+          "sender": "Rachel (PT Coach)",
+          "role": "pt",
+          "message": "Hey Rohan! Rachel here, your personal trainer. Ready to get moving? 💪 What's your current activity level?",
+          "time": "17:00",
+          "date": "Jan 10"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Correlating your meal timing with sleep data: Late dinners (after 8 PM) correlate with 23% longer sleep onset. Recommend 3-hour food cutoff before bed. Your HRV is averaging 28ms - low for your age group, indicating high chronic stress.",
+          "time": "20:00",
+          "date": "Jan 11",
+          "type": "analysis"
+        }
+      ]
+    },
+    "week_3": {
+      "date_range": "Jan 15-21",
+      "phase": "Month 1: Onboarding & Foundation Building",
+      "messages": [
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Carla, tried your breakfast suggestions this week. The overnight oats worked well, but struggled with portion control during client dinner yesterday 😅",
+          "time": "08:00",
+          "date": "Jan 15"
+        },
+        {
+          "sender": "Carla (Nutritionist)",
+          "role": "nutritionist",
+          "message": "That's totally normal! Client dinners are tricky. Try eating a small protein snack 2 hours before. Progress not perfection! 👍",
+          "time": "09:00",
+          "date": "Jan 15"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Week 2 data shows improvement: Sleep efficiency up to 71% (+3%), RHR trending down to 69 bpm. However, detected elevated stress on Jan 13th - stress score 89/100. Was this during your client presentation? Cortisol patterns suggest acute work-related stressor.",
+          "time": "11:30",
+          "date": "Jan 15",
+          "type": "data"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Spot on Advik! That was my biggest presentation of the quarter. Amazing how the data captures everything. Any strategies for managing these stress spikes?",
+          "time": "11:45",
+          "date": "Jan 15"
+        },
+        {
+          "sender": "Rachel (PT Coach)",
+          "role": "pt",
+          "message": "Rohan! Ready for your first workout plan? I've designed a 20-min hotel room routine. No equipment needed. When can you start?",
+          "time": "18:00",
+          "date": "Jan 16"
+        }
+      ]
+    },
+    "week_4": {
+      "date_range": "Jan 22-28",
+      "phase": "Month 1: Onboarding & Foundation Building",
+      "messages": [
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Rachel! Did it twice so far 💪 Modified push-ups are humbling though 😅 Hotel gym is decent, might add some cardio tomorrow",
+          "time": "20:00",
+          "date": "Jan 22"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Exercise impact analysis: Post-workout HRV increased 18% within 2 hours, indicating positive adaptation. Sleep quality improved 22% on workout days vs non-workout days. Recommend consistency - your body responds excellently to structured movement.",
+          "time": "09:30",
+          "date": "Jan 24",
+          "type": "analysis"
+        },
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "Rohan, fantastic first month! Key wins: 3 workouts completed, 70% nutrition adherence, vitamin D supplement started. Ready for month 2 goals?",
+          "time": "10:00",
+          "date": "Jan 30",
+          "type": "milestone"
+        },
+        {
+          "sender": "Ruby (Concierge)",
+          "role": "concierge",
+          "message": "Month 1 complete! 🎉 You're building great habits. Month 2 focus: sleep optimization and increasing workout frequency.",
+          "time": "11:00",
+          "date": "Jan 30",
+          "type": "milestone"
+        }
+      ]
+    },
+    "week_5": {
+      "date_range": "Feb 1-7",
+      "phase": "Month 2: Test Results & Plan Development",
+      "messages": [
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "Good morning Rohan! I've reviewed your comprehensive test results. Overall, very encouraging findings. Your lipid panel shows improvement, and inflammatory markers are within normal range.",
+          "time": "09:15",
+          "date": "Feb 1",
+          "type": "results"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "That's great to hear! What about the areas we were concerned about?",
+          "time": "09:18",
+          "date": "Feb 1"
+        },
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "Your HbA1c is 6.1% - borderline prediabetic range. This aligns with your family history. The good news is it's completely manageable with targeted interventions. Vitamin D is low at 18 ng/ml, which could explain some fatigue.",
+          "time": "09:22",
+          "date": "Feb 1"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Month 1 comprehensive biometric analysis: Average sleep duration increased to 6.2 hours (+11%), deep sleep percentage improved to 16.8% (+2.8%). Most significant finding: HRV variability decreased 31% - indicates improved autonomic nervous system balance. Your body is adapting positively.",
+          "time": "10:00",
+          "date": "Feb 1",
+          "type": "milestone"
+        },
+        {
+          "sender": "Ruby (Concierge)",
+          "role": "concierge",
+          "message": "Hi Rohan! I'm coordinating your care team meeting this afternoon. Dr. Warren, our nutritionist Carla, and PT coach Rachel will create your personalized protocol. Expect a comprehensive plan by evening.",
+          "time": "10:30",
+          "date": "Feb 1"
+        }
+      ]
+    },
+    "week_6": {
+      "date_range": "Feb 5-11",
+      "phase": "Month 2: Test Results & Plan Development",
+      "messages": [
+        {
+          "sender": "Ruby (Concierge)",
+          "role": "concierge",
+          "message": "Good morning! Your Freestyle Libre CGM arrives today. I've also prepared your Singapore travel health pack - restaurant recommendations, gym partnerships, and supplement organizer.",
+          "time": "08:00",
+          "date": "Feb 5"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Travel week preparation: Based on your Singapore itinerary, I've calculated 7-hour jet lag impact. Expect 2-3 days of disrupted circadian rhythm. Pre-travel protocol: Start shifting sleep 30 minutes earlier for 3 days. Light therapy recommendations attached.",
+          "time": "09:00",
+          "date": "Feb 5",
+          "type": "travel"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Day 3 with CGM - fascinating data! My glucose spikes after conference breakfast pastries but stays stable with eggs and avocado. Is 140 mg/dl after meals concerning?",
+          "time": "10:15",
+          "date": "Feb 8"
+        },
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "140 mg/dl post-meal is acceptable, but ideally we want <120. The pattern recognition is exactly why we're using CGM! This data helps us fine-tune your plan in real-time.",
+          "time": "10:30",
+          "date": "Feb 8"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Singapore travel analysis: Despite 13-hour flight, your sleep recovered 67% faster than predicted model. Key insight: In-flight movement every 90 minutes correlated with 23% better next-day performance scores. Your jet lag mitigation strategy is working.",
+          "time": "14:00",
+          "date": "Feb 10",
+          "type": "travel"
+        }
+      ]
+    },
+    "week_7": {
+      "date_range": "Feb 12-18",
+      "phase": "Month 2: Test Results & Plan Development",
+      "messages": [
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "Back in Mumbai! Travel went better than expected. Ready to get back to the full routine. Can we review my CGM data?",
+          "time": "09:00",
+          "date": "Feb 12"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Your 2-week CGM data is impressive! Average glucose: 108 mg/dl (excellent), time in range: 78% (good, targeting 85%), dawn phenomenon present but mild. Most interesting: Stress-glucose correlation coefficient of 0.73 - your emotional state significantly impacts metabolic function.",
+          "time": "11:30",
+          "date": "Feb 12",
+          "type": "data"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "The stress-glucose connection is eye-opening. I can literally see how work pressure affects my body in real-time. What can we do about it?",
+          "time": "11:45",
+          "date": "Feb 12"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Implementing targeted intervention: 5-minute breathing protocol during high-stress periods. Based on your HRV patterns, optimal timing is 10 AM, 2 PM, and 6 PM. This should reduce stress-induced glucose spikes by 15-20% based on similar profiles.",
+          "time": "12:00",
+          "date": "Feb 12",
+          "type": "intervention"
+        }
+      ]
+    },
+    "week_8": {
+      "date_range": "Feb 19-25",
+      "phase": "Month 2: Test Results & Plan Development",
+      "messages": [
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "Monthly progress review: Weight down 3.2 kg (mostly visceral fat), energy levels up significantly, sleep quality improved per your wearable data. Your body is transforming at the cellular level.",
+          "time": "09:00",
+          "date": "Feb 19",
+          "type": "milestone"
+        },
+        {
+          "sender": "Rohan",
+          "role": "member",
+          "message": "I can feel the difference! Clothes fit better, no more 3 PM energy crashes. What do my biomarkers predict for the next phase?",
+          "time": "09:15",
+          "date": "Feb 19"
+        },
+        {
+          "sender": "Advik (Performance Scientist)",
+          "role": "scientist",
+          "message": "Month 2 performance analytics: RHR decreased to 62 bpm (-10 bpm, excellent), HRV increased to 38ms (+10ms, significant improvement), sleep efficiency 79% (+11% from baseline). Predictive model suggests 73% probability of achieving target HbA1c by month 4.",
+          "time": "10:00",
+          "date": "Feb 19",
+          "type": "milestone"
+        },
+        {
+          "sender": "Dr. Warren",
+          "role": "doctor",
+          "message": "End of month 2 assessment: You've exceeded our most optimistic projections. Your commitment to the protocol, combined with real-time adjustments, has created remarkable results. Ready for month 3?",
+          "time": "18:00",
+          "date": "Feb 28",
+          "type": "milestone",
+          "alert": "success"
+        }
+      ]
+    }
+  },
+  "key_milestones": [
+    {
+      "week": 4,
+      "title": "Month 1 Complete",
+      "achievements": ["3 workouts completed", "70% nutrition adherence", "Vitamin D supplementation started"],
+      "next_goals": ["Sleep optimization", "Increase workout frequency"]
+    },
+    {
+      "week": 8,
+      "title": "Month 2 Assessment",
+      "achievements": ["Weight loss: 3.2kg", "RHR: 72→62 bpm", "HRV: 28→38ms", "Sleep efficiency: +11%"],
+      "biomarkers": {"hba1c_trend": "improving", "glucose_control": "enhanced"}
+    },
+    {
+      "week": 12,
+      "title": "Quarterly Results",
+      "achievements": ["HbA1c: 6.1→5.8%", "Excellent lipid profile", "Perfect liver markers"],
+      "performance": {"vo2_max": "+12%", "body_battery": "91% average", "biological_age": "-2.3 years"}
+    },
+    {
+      "week": 24,
+      "title": "Mid-Journey Milestone",
+      "achievements": ["Weight loss: 7.2kg", "HbA1c: 5.4%", "BP well-controlled", "Diabetes reversal achieved"],
+      "status": "Exceeded optimistic projections"
+    },
+    {
+      "week": 32,
+      "title": "Journey Complete",
+      "final_results": {
+        "weight_loss": "9.2kg",
+        "hba1c": "5.1%",
+        "bp": "118/75",
+        "biological_age_regression": "3.4 years",
+        "adherence": "67%"
+      }
+    }
+  ],
+  "advik_insights": {
+    "role_description": "Performance Scientist specializing in wearable data analysis, circadian optimization, and biometric correlation",
+    "key_contributions": [
+      "Real-time wearable data analysis",
+      "Stress-performance correlation insights",
+      "Travel adaptation protocols",
+      "Sleep optimization strategies",
+      "HRV and recovery monitoring",
+      "Predictive health modeling"
+    ],
+    "notable_analyses": [
+      "Stress-glucose correlation coefficient of 0.73",
+      "Exercise timing optimization for sleep quality",
+      "Jet lag recovery protocols reducing adaptation time by 40%",
+      "Biological age regression tracking",
+      "Performance plateau identification and management"
+    ]
+  },
+  "travel_adaptations": [
+    {
+      "destination": "Singapore",
+      "week": 6,
+      "time_difference": "+7 hours",
+      "protocols": ["Sleep shifting 30min for 3 days", "Light therapy", "In-flight movement every 90min"],
+      "outcome": "67% faster recovery than predicted"
+    },
+    {
+      "destination": "Dubai",
+      "week": 10,
+      "challenges": ["Heat stress", "40°C temperatures", "Decreased performance"],
+      "adaptations": ["Extra hydration 500ml/day", "Exercise timing adjustment", "Electrolyte increase 150%"],
+      "outcome": "Maintained energy levels throughout trip"
+    },
+    {
+      "destination": "London", 
+      "week": 16,
+      "protocols": ["Morning Thames walks", "Outdoor light exposure"],
+      "outcome": "Circadian realignment in 2.1 days (35% faster than baseline)"
+    },
+    {
+      "destination": "Tokyo",
+      "week": 20,
+      "time_difference": "+8.5 hours",
+      "innovation": ["Meal timing strategy", "Japanese diet integration"],
+      "outcome": ["Glucose variability improved 31%", "Stable performance metrics"]
+    }
+  ],
+  "health_transformations": {
+    "baseline": {
+      "hba1c": "6.2%",
+      "status": "Pre-diabetic",
+      "rhr": "72 bpm",
+      "hrv": "28ms",
+      "sleep_efficiency": "68%",
+      "medication": "Metformin 500mg daily"
+    },
+    "final": {
+      "hba1c": "5.1%",
+      "status": "Optimal metabolic health",
+      "rhr": "58 bpm",
+      "hrv": "47ms", 
+      "sleep_efficiency": "83%",
+      "bp": "118/75",
+      "weight_change": "-9.2kg",
+      "biological_age_change": "-3.4 years"
+    }
+  }
+}

@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elyx Health Journey - Complete 8-Month Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #075e54, #128c7e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-nav {
+            background: #f0f0f0;
+            padding: 15px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .timeline-btn {
+            padding: 6px 10px;
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 10px;
+            transition: all 0.3s;
+            min-width: 45px;
+        }
+        
+        .timeline-btn:hover {
+            background: #1eb352;
+            transform: translateY(-2px);
+        }
+        
+        .timeline-btn.active {
+            background: #007bb5;
+            box-shadow: 0 4px 8px rgba(0,123,181,0.3);
+        }
+        
+        .timeline-btn.milestone {
+            background: #e74c3c;
+        }
+        
+        .timeline-btn.month1 {
+            background: #9b59b6;
+        }
+        
+        .timeline-btn.month2 {
+            background: #f39c12;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 6px 12px;
+            background: #34495e;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: #2c3e50;
+        }
+        
+        .chat-container {
+            height: 600px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #e5ddd5;
+            position: relative;
+        }
+        
+        .week-divider {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            font-weight: bold;
+            color: #075e54;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .month-divider {
+            text-align: center;
+            margin: 30px 0;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2em;
+            position: sticky;
+            top: 0;
+            z-index: 15;
+        }
+        
+        .message {
+            margin: 8px 0;
+            display: flex;
+            align-items: flex-end;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+        
+        .message.sent .message-content {
+            background: #dcf8c6;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.received .message-content {
+            background: white;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .sender-name {
+            font-weight: bold;
+            color: #075e54;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        
+        .timestamp {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+        }
+        
+        .role-doctor { border-left: 3px solid #e74c3c; }
+        .role-nutritionist { border-left: 3px solid #f39c12; }
+        .role-pt { border-left: 3px solid #3498db; }
+        .role-concierge { border-left: 3px solid #9b59b6; }
+        .role-scientist { border-left: 3px solid #1abc9c; }
+        .role-rm { border-left: 3px solid #34495e; }
+        
+        .milestone-message {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726) !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        .stats-dashboard {
+            background: white;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #075e54;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .progress-indicator {
+            background: #ecf0f1;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #25d366, #128c7e);
+            border-radius: 3px;
+            transition: width 1s ease-in-out;
+        }
+        
+        .quick-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .quick-stat {
+            text-align: center;
+            color: white;
+            margin: 5px;
+        }
+        
+        .quick-stat-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .quick-stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+        
+        .health-alert {
+            background: #fff3cd !important;
+            border-left: 4px solid #ffc107 !important;
+            color: #856404 !important;
+        }
+        
+        .emergency-alert {
+            background: #f8d7da !important;
+            border-left: 4px solid #dc3545 !important;
+            color: #721c24 !important;
+        }
+        
+        .success-alert {
+            background: #d1e7dd !important;
+            border-left: 4px solid #198754 !important;
+            color: #0f5132 !important;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-nav {
+                gap: 4px;
+            }
+            
+            .timeline-btn {
+                min-width: 40px;
+                padding: 4px 8px;
+                font-size: 9px;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Elyx Health Journey - Complete Timeline</h1>
+            <p>8-Month Health Transformation: From Onboarding to Optimization</p>
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="totalMessages">1,247</div>
+                    <div class="quick-stat-label">Messages</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="doctorHours">38.5</div>
+                    <div class="quick-stat-label">Dr Hours</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="coachHours">52.8</div>
+                    <div class="quick-stat-label">Coach Hours</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="adherence">67%</div>
+                    <div class="quick-stat-label">Avg Adherence</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="weightLoss">-9.2kg</div>
+                    <div class="quick-stat-label">Total Loss</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="hba1c">5.1%</div>
+                    <div class="quick-stat-label">Final HbA1c</div>
+                </div>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-fill" id="overallProgress" style="width: 100%"></div>
+            </div>
+        </div>
+        
+        <div class="timeline-nav" id="timelineNav">
+            <!-- Timeline buttons will be generated by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" onclick="showFullMonth1()">📱 Month 1 Journey</button>
+            <button class="control-btn" onclick="showFullMonth2()">📊 Month 2 Results</button>
+            <button class="control-btn" onclick="showMilestones()">🎯 Milestones</button>
+            <button class="control-btn" onclick="showCriticalMoments()">⚠️ Critical Moments</button>
+            <button class="control-btn" onclick="showAdvikInsights()">📈 Advik's Analysis</button>
+            <button class="control-btn" onclick="showTravelWeeks()">✈️ Travel Weeks</button>
+            <button class="control-btn" onclick="playFullJourney()">▶️ Complete Journey</button>
+            <button class="control-btn" onclick="resetView()">🔄 Reset</button>
+        </div>
+        
+        <div class="chat-container" id="chatContainer"></div>
+        
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-value">32</div>
+                <div class="stat-label">Weeks Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Workout Sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Travel Trips</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Diagnostic Tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Plan Adjustments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">-9.2kg</div>
+                <div class="stat-label">Weight Change</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">118/75</div>
+                <div class="stat-label">Final BP</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5.1%</div>
+                <div class="stat-label">Final HbA1c</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete conversation data including Month 1, Month 2, and Weeks 8-32
+        const weeklyConversations = generateCompleteConversations();
+        let currentWeek = 1;
+        let displayMode = 'single';
+        
+        function generateCompleteConversations() {
+            const conversations = {};
+            
+            // MONTH 1 CONVERSATIONS (Weeks 1-4) - Enhanced with Advik
+            conversations.week1 = [
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Hi Rohan! 👋 Welcome to Elyx! I'm Ruby, your dedicated concierge. I'll be coordinating your healthcare journey. Are you ready to get started?",
+                    time: "09:00",
+                    date: "Jan 1",
+                    type: "onboarding"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Ruby! Yes, absolutely. I'm excited to finally prioritize my health properly.",
+                    time: "09:15",
+                    date: "Jan 1"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Hello Rohan, I'm Dr. Warren, your primary physician at Elyx. Let's start with your medical history. Any current medications or chronic conditions?",
+                    time: "10:00",
+                    date: "Jan 2",
+                    type: "medical"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Doctor. I'm pre-diabetic (HbA1c was 6.2 last check). Taking metformin 500mg daily. Family history of diabetes and hypertension.",
+                    time: "10:30",
+                    date: "Jan 2"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Hello Rohan, I'm Advik, your performance scientist. I'll be analyzing your wearable data, sleep patterns, and stress metrics. Have you been using any fitness tracking devices? I need baseline data to establish your performance profile.",
+                    time: "14:00",
+                    date: "Jan 3",
+                    type: "data"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Advik! I have a Garmin Fenix 7 that I wear daily. Sleep has been poor lately - averaging 5.5-6 hours with lots of wake-ups.",
+                    time: "14:15",
+                    date: "Jan 3"
+                },
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Your comprehensive health assessment is scheduled for Thursday 8 AM at Elyx Diagnostics, Bandra. 12-hour fasting required.",
+                    time: "16:00",
+                    date: "Jan 5"
+                }
+            ];
+
+            conversations.week2 = [
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Hi Rohan, just reviewed your results. Overall good news! HbA1c is 6.1 (improvement!), but we need to address vitamin D deficiency and slightly elevated cholesterol.",
+                    time: "14:30",
+                    date: "Jan 8",
+                    type: "results"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Week 1 wearable analysis complete. Key findings: Average RHR 72 bpm (slightly elevated), sleep efficiency 68% (concerning), deep sleep only 14% of total sleep time. Stress score averaging 65/100. We need immediate sleep hygiene intervention.",
+                    time: "15:00",
+                    date: "Jan 8",
+                    type: "data"
+                },
+                {
+                    sender: "Carla (Nutritionist)",
+                    role: "nutritionist",
+                    message: "Hi Rohan! I'm Carla, your nutritionist. Dr. Warren shared your results. Let's work on a travel-friendly meal plan. What's your current eating pattern?",
+                    time: "10:00",
+                    date: "Jan 9"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Carla! Honestly, it's erratic. Lots of client dinners, airport food, irregular timings. I skip breakfast often. @Advik - those sleep numbers are alarming but accurate.",
+                    time: "10:30",
+                    date: "Jan 9"
+                },
+                {
+                    sender: "Rachel (PT Coach)",
+                    role: "pt",
+                    message: "Hey Rohan! Rachel here, your personal trainer. Ready to get moving? 💪 What's your current activity level?",
+                    time: "17:00",
+                    date: "Jan 10"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Correlating your meal timing with sleep data: Late dinners (after 8 PM) correlate with 23% longer sleep onset. Recommend 3-hour food cutoff before bed. Your HRV is averaging 28ms - low for your age group, indicating high chronic stress.",
+                    time: "20:00",
+                    date: "Jan 11",
+                    type: "analysis"
+                }
+            ];
+
+            conversations.week3 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Carla, tried your breakfast suggestions this week. The overnight oats worked well, but struggled with portion control during client dinner yesterday 😅",
+                    time: "08:00",
+                    date: "Jan 15"
+                },
+                {
+                    sender: "Carla (Nutritionist)",
+                    role: "nutritionist",
+                    message: "That's totally normal! Client dinners are tricky. Try eating a small protein snack 2 hours before. Progress not perfection! 👍",
+                    time: "09:00",
+                    date: "Jan 15"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Week 2 data shows improvement: Sleep efficiency up to 71% (+3%), RHR trending down to 69 bpm. However, detected elevated stress on Jan 13th - stress score 89/100. Was this during your client presentation? Cortisol patterns suggest acute work-related stressor.",
+                    time: "11:30",
+                    date: "Jan 15",
+                    type: "data"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Spot on Advik! That was my biggest presentation of the quarter. Amazing how the data captures everything. Any strategies for managing these stress spikes?",
+                    time: "11:45",
+                    date: "Jan 15"
+                },
+                {
+                    sender: "Rachel (PT Coach)",
+                    role: "pt",
+                    message: "Rohan! Ready for your first workout plan? I've designed a 20-min hotel room routine. No equipment needed. When can you start?",
+                    time: "18:00",
+                    date: "Jan 16"
+                }
+            ];
+
+            conversations.week4 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Rachel! Did it twice so far 💪 Modified push-ups are humbling though 😅 Hotel gym is decent, might add some cardio tomorrow",
+                    time: "20:00",
+                    date: "Jan 22"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Exercise impact analysis: Post-workout HRV increased 18% within 2 hours, indicating positive adaptation. Sleep quality improved 22% on workout days vs non-workout days. Recommend consistency - your body responds excellently to structured movement.",
+                    time: "09:30",
+                    date: "Jan 24",
+                    type: "analysis"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Rohan, fantastic first month! Key wins: 3 workouts completed, 70% nutrition adherence, vitamin D supplement started. Ready for month 2 goals?",
+                    time: "10:00",
+                    date: "Jan 30",
+                    type: "milestone"
+                },
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Month 1 complete! 🎉 You're building great habits. Month 2 focus: sleep optimization and increasing workout frequency.",
+                    time: "11:00",
+                    date: "Jan 30",
+                    type: "milestone"
+                }
+            ];
+
+            // MONTH 2 CONVERSATIONS (Weeks 5-8) - Enhanced with Advik
+            conversations.week5 = [
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Good morning Rohan! I've reviewed your comprehensive test results. Overall, very encouraging findings. Your lipid panel shows improvement, and inflammatory markers are within normal range.",
+                    time: "09:15",
+                    date: "Feb 1",
+                    type: "results"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "That's great to hear! What about the areas we were concerned about?",
+                    time: "09:18",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Your HbA1c is 6.1% - borderline prediabetic range. This aligns with your family history. The good news is it's completely manageable with targeted interventions. Vitamin D is low at 18 ng/ml, which could explain some fatigue.",
+                    time: "09:22",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Month 1 comprehensive biometric analysis: Average sleep duration increased to 6.2 hours (+11%), deep sleep percentage improved to 16.8% (+2.8%). Most significant finding: HRV variability decreased 31% - indicates improved autonomic nervous system balance. Your body is adapting positively.",
+                    time: "10:00",
+                    date: "Feb 1",
+                    type: "milestone"
+                },
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Hi Rohan! I'm coordinating your care team meeting this afternoon. Dr. Warren, our nutritionist Carla, and PT coach Rachel will create your personalized protocol. Expect a comprehensive plan by evening.",
+                    time: "10:30",
+                    date: "Feb 1"
+                }
+            ];
+
+            conversations.week6 = [
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Good morning! Your Freestyle Libre CGM arrives today. I've also prepared your Singapore travel health pack - restaurant recommendations, gym partnerships, and supplement organizer.",
+                    time: "08:00",
+                    date: "Feb 5"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Travel week preparation: Based on your Singapore itinerary, I've calculated 7-hour jet lag impact. Expect 2-3 days of disrupted circadian rhythm. Pre-travel protocol: Start shifting sleep 30 minutes earlier for 3 days. Light therapy recommendations attached.",
+                    time: "09:00",
+                    date: "Feb 5",
+                    type: "travel"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Day 3 with CGM - fascinating data! My glucose spikes after conference breakfast pastries but stays stable with eggs and avocado. Is 140 mg/dl after meals concerning?",
+                    time: "10:15",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "140 mg/dl post-meal is acceptable, but ideally we want <120. The pattern recognition is exactly why we're using CGM! This data helps us fine-tune your plan in real-time.",
+                    time: "10:30",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Singapore travel analysis: Despite 13-hour flight, your sleep recovered 67% faster than predicted model. Key insight: In-flight movement every 90 minutes correlated with 23% better next-day performance scores. Your jet lag mitigation strategy is working.",
+                    time: "14:00",
+                    date: "Feb 10",
+                    type: "travel"
+                }
+            ];
+
+            conversations.week7 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Back in Mumbai! Travel went better than expected. Ready to get back to the full routine. Can we review my CGM data?",
+                    time: "09:00",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Your 2-week CGM data is impressive! Average glucose: 108 mg/dl (excellent), time in range: 78% (good, targeting 85%), dawn phenomenon present but mild. Most interesting: Stress-glucose correlation coefficient of 0.73 - your emotional state significantly impacts metabolic function.",
+                    time: "11:30",
+                    date: "Feb 12",
+                    type: "data"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "The stress-glucose connection is eye-opening. I can literally see how work pressure affects my body in real-time. What can we do about it?",
+                    time: "11:45",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Implementing targeted intervention: 5-minute breathing protocol during high-stress periods. Based on your HRV patterns, optimal timing is 10 AM, 2 PM, and 6 PM. This should reduce stress-induced glucose spikes by 15-20% based on similar profiles.",
+                    time: "12:00",
+                    date: "Feb 12",
+                    type: "intervention"
+                }
+            ];
+
+            conversations.week8 = [
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Monthly progress review: Weight down 3.2 kg (mostly visceral fat), energy levels up significantly, sleep quality improved per your wearable data. Your body is transforming at the cellular level.",
+                    time: "09:00",
+                    date: "Feb 19",
+                    type: "milestone"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I can feel the difference! Clothes fit better, no more 3 PM energy crashes. What do my biomarkers predict for the next phase?",
+                    time: "09:15",
+                    date: "Feb 19"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Month 2 performance analytics: RHR decreased to 62 bpm (-10 bpm, excellent), HRV increased to 38ms (+10ms, significant improvement), sleep efficiency 79% (+11% from baseline). Predictive model suggests 73% probability of achieving target HbA1c by month 4.",
+                    time: "10:00",
+                    date: "Feb 19",
+                    type: "milestone"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "End of month 2 assessment: You've exceeded our most optimistic projections. Your commitment to the protocol, combined with real-time adjustments, has created remarkable results. Ready for month 3?",
+                    time: "18:00",
+                    date: "Feb 28",
+                    type: "milestone",
+                    alert: "success"
+                }
+            ];
+
+            // EXTENDED IMPLEMENTATION (Weeks 9-32) with Advik integration
+            conversations.week9 = [
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Good morning Rohan! Weekly check-in: How did the new workout intensity feel? Any concerns before your Dubai trip?",
+                    time: "08:00",
+                    date: "Mar 4",
+                    type: "checkin"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Morning Ruby! The workouts are challenging but good. Slight concern - my BP readings have been elevated this week. Stress from the merger deal perhaps?",
+                    time: "08:15",
+                    date: "Mar 4"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Analyzing your week 8-9 data: Detected 23% increase in resting heart rate variability during working hours (9-6 PM). Correlation analysis shows 0.81 coefficient between meeting density and stress markers. The merger workload is measurably impacting your autonomic nervous system.",
+                    time: "08:30",
+                    date: "Mar 4",
+                    type: "analysis"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Let's monitor this closely. What readings are you seeing? The combination of new exercise intensity + work stress could be a factor. Let's adjust.",
+                    time: "08:45",
+                    date: "Mar 4",
+                    type: "medical"
+                }
+            ];
+
+            conversations.week10 = [
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Dubai travel analytics: Time zone shift (+2.5 hours) processed efficiently - only 1.3 days to baseline circadian rhythm vs predicted 2-3 days. However, hotel gym sessions show 18% decreased power output. Recommend active recovery protocol.",
+                    time: "09:00",
+                    date: "Mar 11",
+                    type: "travel"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "You're right about the decreased performance. Felt sluggish during workouts. The heat here is also intense - affecting my runs.",
+                    time: "09:15",
+                    date: "Mar 11"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Heat stress analysis: Core temperature elevation detected via wearable sensors. Recommendation: Hydrate 500ml extra per day, exercise before 7 AM or after 7 PM, electrolyte supplementation increased by 150%. Your sweat rate in 40°C heat is 1.2L/hour - above average.",
+                    time: "09:30",
+                    date: "Mar 11",
+                    type: "intervention"
+                }
+            ];
+
+            conversations.week11 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Back from Dubai. Your heat protocols worked perfectly! Maintained energy levels throughout. Question: My sleep score has been consistently 85+ lately. What's driving the improvement?",
+                    time: "07:30",
+                    date: "Mar 18"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Sleep optimization success factors analysis: 1) Consistent 10:30 PM bedtime (+/- 15 min), 2) Room temperature maintained at 18-19°C, 3) Blue light elimination 2 hours pre-sleep, 4) Magnesium supplementation timing. Your sleep architecture now shows 21% deep sleep - optimal range achieved.",
+                    time: "08:00",
+                    date: "Mar 18",
+                    type: "success"
+                }
+            ];
+
+            conversations.week12 = [
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Quarterly lab results are in! 🎉 HbA1c down to 5.8% (from 6.1%), lipids excellent, liver markers perfect. The BP medication + lifestyle changes are working beautifully.",
+                    time: "10:30",
+                    date: "Apr 1",
+                    type: "milestone",
+                    alert: "success"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "That's incredible! I feel like a different person. Energy is through the roof, even with the work stress.",
+                    time: "10:45",
+                    date: "Apr 1"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Quarterly performance metrics: VO2 max estimated increase +12%, body battery recovery 91% average (excellent), chronic stress load decreased 34%. Most significant: Your biological age markers suggest 2.3 years younger than chronological age. Extraordinary progress.",
+                    time: "11:00",
+                    date: "Apr 1",
+                    type: "milestone"
+                }
+            ];
+
+            conversations.week13 = [
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Week 13 anomaly detection: Your training load exceeded functional threshold by 23% last week. Recovery metrics suggest overreaching - HRV decreased 15%, sleep latency increased 8 minutes. Recommend deload week to prevent overtraining syndrome.",
+                    time: "08:00",
+                    date: "Apr 8",
+                    type: "alert",
+                    alert: "health"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I did push harder than usual. Feeling it now - legs heavy, motivation low. Should I stop exercising completely?",
+                    time: "08:15",
+                    date: "Apr 8"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Not complete rest - active recovery protocol: 40-50% intensity, focus on mobility, yoga, and walking. Your parasympathetic nervous system needs 5-7 days to rebalance. Swimming would be optimal if available - low impact, full body movement.",
+                    time: "08:30",
+                    date: "Apr 8",
+                    type: "intervention"
+                }
+            ];
+
+            conversations.week16 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Quick question - traveling to London next week. My Garmin shows I've been overtraining (performance condition declining). Should I deload?",
+                    time: "11:20",
+                    date: "Apr 29"
+                },
+                {
+                    sender: "Rachel (PT Coach)",
+                    role: "pt",
+                    message: "Absolutely! Your body stress score has been red for 3 days. Let's do mobility and light cardio only this week. London hotel gym has a great pool - use it!",
+                    time: "11:35",
+                    date: "Apr 29",
+                    type: "adjustment"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "London travel optimization: 5-hour time difference requires circadian adjustment protocol. Start shifting bedtime 1 hour earlier for 3 days pre-departure. Light exposure timing critical - morning light upon arrival, avoid evening screens. Your jet lag recovery typically takes 3.2 days based on historical data.",
+                    time: "12:00",
+                    date: "Apr 29",
+                    type: "travel"
+                }
+            ];
+
+            conversations.week18 = [
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "London trip performance analysis: Exceptional adaptation - circadian rhythm realigned in 2.1 days (35% faster than baseline). Key success factor: consistent morning outdoor walks. Sleep quality maintained 82% average despite travel stress. Your travel protocols are now optimized.",
+                    time: "09:00",
+                    date: "May 13",
+                    type: "travel"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "The morning Thames walks were game-changing! Felt energized throughout the conferences. Can we apply this pattern to all future travel?",
+                    time: "09:15",
+                    date: "May 13"
+                }
+            ];
+
+            conversations.week20 = [
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: "Weekly check-in + exciting news! We've partnered with a Michelin-starred healthy restaurant in Tokyo for your upcoming trip. Pre-booked 3 dinners aligned with your macros 🍱",
+                    time: "09:00",
+                    date: "May 27",
+                    type: "checkin"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "You guys are unreal! This level of service... I'm telling all my CEO friends about Elyx. Question: can we adjust my meal timing for the jet lag?",
+                    time: "09:15",
+                    date: "May 27"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Tokyo travel protocol (+8.5 hours): Major circadian disruption expected. Meal timing strategy - shift eating window gradually: Days 1-2: Eat breakfast at 10 AM Tokyo time, Days 3-4: Normal schedule. This prevents metabolic jet lag which impacts glucose control for 5-7 days typically.",
+                    time: "09:30",
+                    date: "May 27",
+                    type: "travel"
+                }
+            ];
+
+            conversations.week22 = [
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Tokyo trip biometric summary: Most challenging time zone shift to date, yet performance metrics remained stable. Innovation: Real-time glucose monitoring revealed Japanese diet (high quality carbs + fish) improved your glucose variability by 31% vs Mumbai diet. Consider incorporating these patterns.",
+                    time: "08:30",
+                    date: "Jun 10",
+                    type: "travel"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "The food was incredible and I felt amazing! Energy levels were so stable. How do we maintain this back home?",
+                    time: "08:45",
+                    date: "Jun 10"
+                }
+            ];
+
+            conversations.week24 = [
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Mid-journey check: 6 months in! Your transformation metrics: Weight -7.2kg, HbA1c 5.4%, BP well-controlled on low-dose medication. You've essentially reversed prediabetes! 🏆",
+                    time: "08:30",
+                    date: "Jun 24",
+                    type: "milestone",
+                    alert: "success"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Mind = blown. Six months ago I was heading toward diabetes and felt exhausted constantly. Now I feel 10 years younger!",
+                    time: "08:45",
+                    date: "Jun 24"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "6-month longitudinal analysis: Comprehensive biomarker trends show remarkable optimization. RHR: 72→58 bpm (-19%), HRV: 28→45ms (+61%), VO2 max: estimated +18% improvement. Most importantly: biological age regression of 3.1 years. You've achieved elite athlete-level recovery metrics.",
+                    time: "09:00",
+                    date: "Jun 24",
+                    type: "milestone"
+                }
+            ];
+
+            conversations.week26 = [
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Performance plateau analysis: Week 24-26 metrics show stabilization rather than continued improvement. This is expected and healthy - your body has reached a new homeostatic point. Now focusing on maintenance and preventing regression. Introducing periodization to prevent staleness.",
+                    time: "10:00",
+                    date: "Jul 8",
+                    type: "analysis"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I was wondering about that! Felt like progress slowed down. Good to know it's normal. What's the periodization plan?",
+                    time: "10:15",
+                    date: "Jul 8"
+                }
+            ];
+
+            conversations.week28 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Houston, we have a problem. Conference food for 4 days straight, zero gym access, and my BP spiked to 155/92 this morning. Feeling awful. 😞",
+                    time: "07:20",
+                    date: "Jul 22",
+                    type: "emergency",
+                    alert: "emergency"
+                },
+                {
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: "Don't panic! This is exactly why we track everything. Temporary spikes happen. Double your meditation today, increase BP meds to 7.5mg, and let's get you back on track. How's your hydration?",
+                    time: "07:35",
+                    date: "Jul 22",
+                    type: "emergency"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Emergency data analysis: Conference stress + dietary deviation created perfect storm. Stress score peaked at 94/100, sleep efficiency dropped to 61%, HRV decreased 40%. However, your baseline fitness means recovery will be faster. Estimate 3-4 days to return to optimal ranges vs 7-10 days for average individual.",
+                    time: "08:00",
+                    date: "Jul 22",
+                    type: "emergency"
+                }
+            ];
+
+            conversations.week30 = [
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Recovery analysis post-Houston: Full metabolic recovery achieved in 3.2 days (within predicted range). Key insight: Your improved fitness created remarkable resilience. BP normalized, HRV returned to baseline, sleep efficiency back to 81%. This demonstrates the protective effect of your health transformation.",
+                    time: "09:30",
+                    date: "Aug 5",
+                    type: "recovery"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "That's reassuring! I was worried I'd undone months of progress. The bounce-back was surprisingly quick.",
+                    time: "09:45",
+                    date: "Aug 5"
+                }
+            ];
+
+            conversations.week32 = [
+                {
+                    sender: "Neel (Relationship Manager)",
+                    role: "rm",
+                    message: "8-month milestone! 🎊 Your journey stats: 67% average adherence (excellent for your lifestyle), 38.5 doctor hours, 1,247 total interactions. Final results: HbA1c 5.1%, Weight -9.2kg, BP 118/75. You've completely transformed your health trajectory!",
+                    time: "16:00",
+                    date: "Aug 19",
+                    type: "milestone",
+                    alert: "success"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "This has been absolutely life-changing. From pre-diabetic and exhausted to optimal health and energy. The Elyx model works - comprehensive, personalized, and incredibly supportive. What's the maintenance protocol?",
+                    time: "16:15",
+                    date: "Aug 19"
+                },
+                {
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: "Final 8-month performance audit: Comprehensive transformation achieved. Key metrics - RHR: 72→58bpm, HRV: 28→47ms, Sleep efficiency: 68→83%, Biological age: -3.4 years. Maintenance protocol: Monthly check-ins, quarterly full analysis, annual comprehensive assessment. You've built sustainable health infrastructure.",
+                    time: "16:30",
+                    date: "Aug 19",
+                    type: "milestone"
+                }
+            ];
+
+            // Fill in remaining weeks with realistic patterns including Advik
+            for (let week = 14; week <= 31; week++) {
+                if (!conversations[`week${week}`]) {
+                    conversations[`week${week}`] = generateWeekPatternWithAdvik(week);
+                }
+            }
+
+            return conversations;
+        }
+        
+        function generateWeekPatternWithAdvik(weekNum) {
+            const patterns = [
+                // Weekly check-in from concierge
+                {
+                    sender: "Ruby (Concierge)",
+                    role: "concierge",
+                    message: getWeeklyCheckInMessage(weekNum),
+                    time: "08:00",
+                    date: getDateForWeek(weekNum),
+                    type: "checkin"
+                },
+                // Rohan's response/question
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: getRohanQuestion(weekNum),
+                    time: "08:30",
+                    date: getDateForWeek(weekNum)
+                }
+            ];
+
+            // Add Advik's data analysis every 3 weeks
+            if (weekNum % 3 === 0) {
+                patterns.push({
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: getAdvikAnalysis(weekNum),
+                    time: "09:00",
+                    date: getDateForWeek(weekNum),
+                    type: "analysis"
+                });
+            }
+
+            // Add biweekly PT updates
+            if (weekNum % 2 === 0 && weekNum % 3 !== 0) {
+                patterns.push({
+                    sender: "Rachel (PT Coach)",
+                    role: "pt",
+                    message: getPTUpdate(weekNum),
+                    time: "17:00",
+                    date: getDateForWeek(weekNum),
+                    type: "biweekly"
+                });
+            }
+
+            // Add quarterly diagnostics with Advik correlation
+            if (weekNum % 12 === 0) {
+                patterns.push({
+                    sender: "Dr. Warren",
+                    role: "doctor",
+                    message: getQuarterlyResults(weekNum),
+                    time: "10:00",
+                    date: getDateForWeek(weekNum),
+                    type: "milestone",
+                    alert: "success"
+                });
+                patterns.push({
+                    sender: "Advik (Performance Scientist)",
+                    role: "scientist",
+                    message: getQuarterlyAdvikInsight(weekNum),
+                    time: "10:30",
+                    date: getDateForWeek(weekNum),
+                    type: "milestone"
+                });
+            }
+
+            return patterns;
+        }
+
+        function getAdvikAnalysis(week) {
+            const analyses = [
+                "Weekly biometrics: HRV trending upward +5%, sleep efficiency stable at 81%. Minor concern: stress scores elevated during 2-4 PM daily - recommend 5-min breathing protocol.",
+                "Data correlation: Exercise timing vs sleep quality shows optimal window is 4-6 PM. Morning workouts correlate with 12% better sleep scores. Adjusting recommendations accordingly.",
+                "Performance metrics: VO2 max progression plateauing as expected. Recovery rates excellent - 94% within 24 hours post-workout. Your fitness age now 4 years younger than chronological.",
+                "Circadian rhythm analysis: Consistent bedtime achieving 89% sleep regularity score. Light exposure patterns optimal. Your biological clock is now perfectly synchronized.",
+                "Stress-recovery balance: Current training load at 85% of functional threshold - ideal for continued adaptation without overreaching. Autonomic balance excellent.",
+                "Metabolic flexibility analysis: Glucose variability decreased 18% this month. Fat oxidation rates during exercise improved 22%. Your metabolic health is exceptional.",
+                "Travel adaptation patterns: Your jet lag recovery time improved 40% since journey start. Circadian protocols now highly optimized for your physiology.",
+                "Long-term trend analysis: 6-month data shows sustained improvements across all biomarkers. Risk of regression minimal with current protocols."
+            ];
+            return analyses[week % analyses.length];
+        }
+
+        function getQuarterlyAdvikInsight(week) {
+            const insights = [
+                "Quarterly biometric synthesis: All performance indicators in top 10% percentile for age group. Biological age regression of 1.2 years this quarter. Exceptional progress.",
+                "Mid-year performance audit: Comprehensive optimization achieved. RHR, HRV, sleep metrics all at elite athlete levels. Your body has adapted beyond expectations.",
+                "Q3 analysis: Maintenance phase metrics stable and optimal. Focus shifting to longevity markers and sustained performance rather than improvement."
+            ];
+            return insights[Math.floor(week/12) % insights.length];
+        }
+
+        function getWeeklyCheckInMessage(week) {
+            const messages = [
+                "Weekly check-in! How's energy and motivation this week?",
+                "Good morning! Any challenges with the current protocol?",
+                "How did the travel adjustments work out?",
+                "Weekly pulse check - sleep quality and stress levels?",
+                "Morning! Any wearable data concerns this week?"
+            ];
+            return messages[week % messages.length];
+        }
+
+        function getRohanQuestion(week) {
+            const questions = [
+                "Energy is great but noticed my RHR trending up slightly. Normal?",
+                "Travel was smooth thanks to your prep! Question about meal timing...",
+                "Feeling strong but sleep has been inconsistent. Any suggestions?",
+                "The new supplements seem to be working. When do we reassess?",
+                "Quick question about my Garmin data - recovery scores declining?"
+            ];
+            return questions[week % questions.length];
+        }
+
+        function getPTUpdate(week) {
+            const updates = [
+                "Biweekly check: Strength gains solid, let's increase volume by 10%",
+                "Your form videos look excellent! Ready for advanced progressions?",
+                "Recovery metrics suggest we should maintain current intensity",
+                "Great consistency! Let's add some power-focused sessions"
+            ];
+            return updates[(week/2) % updates.length];
+        }
+
+        function getQuarterlyResults(week) {
+            const results = [
+                "Quarterly labs: HbA1c 5.8%, lipids excellent, inflammation markers down 40%!",
+                "Mid-year results: HbA1c 5.4%, BP well-controlled, liver function perfect!",
+                "Q3 results: All biomarkers in optimal range. You've reversed metabolic dysfunction!"
+            ];
+            return results[(week/12) % results.length];
+        }
+
+        function getDateForWeek(week) {
+            const startDate = new Date('2024-01-01');
+            const weekDate = new Date(startDate.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000);
+            return weekDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        }
+
+        function initializeTimeline() {
+            const nav = document.getElementById('timelineNav');
+            for (let week = 1; week <= 32; week++) {
+                const btn = document.createElement('button');
+                btn.className = 'timeline-btn';
+                btn.textContent = `W${week}`;
+                btn.onclick = () => showWeek(week);
+                
+                // Mark different phases
+                if (week <= 4) {
+                    btn.classList.add('month1');
+                } else if (week <= 8) {
+                    btn.classList.add('month2');
+                }
+                
+                // Mark milestone weeks
+                if (week % 12 === 0 || week === 24) {
+                    btn.classList.add('milestone');
+                }
+                
+                nav.appendChild(btn);
+            }
+        }
+
+        function showWeek(week) {
+            currentWeek = week;
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            // Add month marker if it's start of month
+            if (week === 1 || week === 5 || week === 9 || week === 13 || week === 17 || week === 21 || week === 25 || week === 29) {
+                const monthDiv = document.createElement('div');
+                monthDiv.className = 'month-divider';
+                const monthNames = {
+                    1: '📱 MONTH 1: Onboarding & Foundation Building',
+                    5: '📊 MONTH 2: Test Results & Plan Development', 
+                    9: '💪 MONTH 3: Implementation & Optimization',
+                    13: '🎯 MONTH 4: Performance Enhancement',
+                    17: '✈️ MONTH 5: Travel Mastery',
+                    21: '🏆 MONTH 6: Peak Performance',
+                    25: '🔬 MONTH 7: Fine-tuning & Maintenance',
+                    29: '🎊 MONTH 8: Completion & Future Planning'
+                };
+                monthDiv.textContent = monthNames[week];
+                container.appendChild(monthDiv);
+            }
+
+            // Add week divider
+            const divider = document.createElement('div');
+            divider.className = 'week-divider';
+            divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+            container.appendChild(divider);
+
+            // Show conversations for this week
+            const messages = weeklyConversations[`week${week}`] || [];
+            messages.forEach((msg, index) => {
+                setTimeout(() => addMessage(msg), index * 200);
+            });
+
+            // Update active button
+            document.querySelectorAll('.timeline-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === `W${week}`) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function addMessage(msg) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.role === 'member' ? 'sent' : 'received'}`;
+            
+            const roleClass = `role-${msg.role}`;
+            let alertClass = '';
+            
+            if (msg.alert) {
+                alertClass = `${msg.alert}-alert`;
+            }
+            
+            if (msg.type === 'milestone') {
+                alertClass += ' milestone-message';
+            }
+
+            messageDiv.innerHTML = `
+                <div class="message-content ${roleClass} ${alertClass}">
+                    ${msg.role !== 'member' ? `<div class="sender-name">${msg.sender}</div>` : ''}
+                    <div>${msg.message}</div>
+                    <div class="timestamp">${msg.time} • ${msg.date}</div>
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showFullMonth1() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = '📱 MONTH 1: Onboarding & Foundation Building';
+            container.appendChild(titleDiv);
+
+            for (let week = 1; week <= 4; week++) {
+                const divider = document.createElement('div');
+                divider.className = 'week-divider';
+                divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                container.appendChild(divider);
+
+                const messages = weeklyConversations[`week${week}`] || [];
+                messages.forEach(msg => addMessage(msg));
+            }
+        }
+
+        function showFullMonth2() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = '📊 MONTH 2: Test Results & Plan Development';
+            container.appendChild(titleDiv);
+
+            for (let week = 5; week <= 8; week++) {
+                const divider = document.createElement('div');
+                divider.className = 'week-divider';
+                divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                container.appendChild(divider);
+
+                const messages = weeklyConversations[`week${week}`] || [];
+                messages.forEach(msg => addMessage(msg));
+            }
+        }
+
+        function showMilestones() {
+            const milestoneWeeks = [4, 8, 12, 24, 32];
+            showMultipleWeeks(milestoneWeeks, '🎯 Major Milestone Moments');
+        }
+
+        function showCriticalMoments() {
+            const criticalWeeks = [8, 16, 28];
+            showMultipleWeeks(criticalWeeks, '⚠️ Critical Health Moments');
+        }
+
+        function showAdvikInsights() {
+            const advikWeeks = [2, 5, 7, 9, 12, 15, 18, 21, 24, 27, 30, 32];
+            showMultipleWeeks(advikWeeks, '📈 Advik\'s Data-Driven Insights');
+        }
+
+        function showTravelWeeks() {
+            const travelWeeks = [6, 10, 16, 20, 26];
+            showMultipleWeeks(travelWeeks, '✈️ Travel Adaptations');
+        }
+
+        function showMultipleWeeks(weeks, title) {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = title;
+            container.appendChild(titleDiv);
+
+            weeks.forEach(week => {
+                const divider = document.createElement('div');
+                divider.className = 'week-divider';
+                divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                container.appendChild(divider);
+
+                const messages = weeklyConversations[`week${week}`] || [];
+                messages.forEach(msg => addMessage(msg));
+            });
+        }
+
+        function playFullJourney() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = '🚀 COMPLETE 8-MONTH TRANSFORMATION JOURNEY';
+            container.appendChild(titleDiv);
+
+            let delay = 0;
+            for (let week = 1; week <= 32; week++) {
+                setTimeout(() => {
+                    const divider = document.createElement('div');
+                    divider.className = 'week-divider';
+                    
+                    // Add month markers
+                    if (week === 1) divider.textContent = '📱 MONTH 1: Foundation';
+                    else if (week === 5) divider.textContent = '📊 MONTH 2: Development';
+                    else if (week === 9) divider.textContent = '💪 MONTH 3: Implementation';
+                    else if (week === 13) divider.textContent = '🎯 MONTH 4: Optimization';
+                    else if (week === 17) divider.textContent = '✈️ MONTH 5: Travel Mastery';
+                    else if (week === 21) divider.textContent = '🏆 MONTH 6: Peak Performance';
+                    else if (week === 25) divider.textContent = '🔬 MONTH 7: Fine-tuning';
+                    else if (week === 29) divider.textContent = '🎊 MONTH 8: Completion';
+                    else divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                    
+                    container.appendChild(divider);
+
+                    const messages = weeklyConversations[`week${week}`] || [];
+                    messages.forEach((msg, index) => {
+                        setTimeout(() => addMessage(msg), index * 100);
+                    });
+                }, delay);
+                
+                delay += 1000;
+            }
+        }
+
+        function resetView() {
+            document.getElementById('chatContainer').innerHTML = '';
+            document.querySelectorAll('.timeline-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTimeline();
+            showWeek(1); // Start with week 1
+        });
+    </script>
+
+</body>
+</html>
