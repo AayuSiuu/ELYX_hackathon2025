@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elyx Health Journey - Complete 8-Month Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #075e54, #128c7e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-nav {
+            background: #f0f0f0;
+            padding: 15px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .timeline-btn {
+            padding: 6px 10px;
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 10px;
+            transition: all 0.3s;
+            min-width: 45px;
+        }
+        
+        .timeline-btn:hover {
+            background: #1eb352;
+            transform: translateY(-2px);
+        }
+        
+        .timeline-btn.active {
+            background: #007bb5;
+            box-shadow: 0 4px 8px rgba(0,123,181,0.3);
+        }
+        
+        .timeline-btn.milestone {
+            background: #e74c3c;
+        }
+        
+        .timeline-btn.month1 {
+            background: #9b59b6;
+        }
+        
+        .timeline-btn.month2 {
+            background: #f39c12;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 6px 12px;
+            background: #34495e;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: #2c3e50;
+        }
+        
+        .chat-container {
+            height: 600px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #e5ddd5;
+            position: relative;
+        }
+        
+        .week-divider {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            font-weight: bold;
+            color: #075e54;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .month-divider {
+            text-align: center;
+            margin: 30px 0;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2em;
+            position: sticky;
+            top: 0;
+            z-index: 15;
+        }
+        
+        .message {
+            margin: 8px 0;
+            display: flex;
+            align-items: flex-end;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+        
+        .message.sent .message-content {
+            background: #dcf8c6;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.received .message-content {
+            background: white;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .sender-name {
+            font-weight: bold;
+            color: #075e54;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        
+        .timestamp {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+        }
+        
+        .role-doctor { border-left: 3px solid #e74c3c; }
+        .role-nutritionist { border-left: 3px solid #f39c12; }
+        .role-pt { border-left: 3px solid #3498db; }
+        .role-concierge { border-left: 3px solid #9b59b6; }
+        .role-scientist { border-left: 3px solid #1abc9c; }
+        .role-rm { border-left: 3px solid #34495e; }
+        
+        .milestone-message {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726) !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        .stats-dashboard {
+            background: white;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #075e54;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .progress-indicator {
+            background: #ecf0f1;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #25d366, #128c7e);
+            border-radius: 3px;
+            transition: width 1s ease-in-out;
+        }
+        
+        .quick-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .quick-stat {
+            text-align: center;
+            color: white;
+            margin: 5px;
+        }
+        
+        .quick-stat-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .quick-stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+        
+        .health-alert {
+            background: #fff3cd !important;
+            border-left: 4px solid #ffc107 !important;
+            color: #856404 !important;
+        }
+        
+        .emergency-alert {
+            background: #f8d7da !important;
+            border-left: 4px solid #dc3545 !important;
+            color: #721c24 !important;
+        }
+        
+        .success-alert {
+            background: #d1e7dd !important;
+            border-left: 4px solid #198754 !important;
+            color: #0f5132 !important;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-nav {
+                gap: 4px;
+            }
+            
+            .timeline-btn {
+                min-width: 40px;
+                padding: 4px 8px;
+                font-size: 9px;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Elyx Health Journey - Complete Timeline</h1>
+            <p>8-Month Health Transformation: From Onboarding to Optimization</p>
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="totalMessages">1,247</div>
+                    <div class="quick-stat-label">Messages</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="doctorHours">38.5</div>
+                    <div class="quick-stat-label">Dr Hours</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="coachHours">52.8</div>
+                    <div class="quick-stat-label">Coach Hours</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="adherence">67%</div>
+                    <div class="quick-stat-label">Avg Adherence</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="weightLoss">-9.2kg</div>
+                    <div class="quick-stat-label">Total Loss</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="hba1c">5.1%</div>
+                    <div class="quick-stat-label">Final HbA1c</div>
+                </div>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-fill" id="overallProgress" style="width: 100%"></div>
+            </div>
+        </div>
+        
+        <div class="timeline-nav" id="timelineNav">
+            <!-- Timeline buttons will be generated by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" onclick="showFullMonth1()">📱 Month 1 Journey</button>
+            <button class="control-btn" onclick="showFullMonth2()">📊 Month 2 Results</button>
+            <button class="control-btn" onclick="showMilestones()">🎯 Milestones</button>
+            <button class="control-btn" onclick="showCriticalMoments()">⚠️ Critical Moments</button>
+            <button class="control-btn" onclick="showTravelWeeks()">✈️ Travel Weeks</button>
+            <button class="control-btn" onclick="playFullJourney()">▶️ Complete Journey</button>
+            <button class="control-btn" onclick="resetView()">🔄 Reset</button>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <!-- Messages will be populated by JavaScript -->
+        </div>
+        
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-value">32</div>
+                <div class="stat-label">Weeks Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Workout Sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Travel Trips</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Diagnostic Tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Plan Adjustments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">-9.2kg</div>
+                <div class="stat-label">Weight Change</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">118/75</div>
+                <div class="stat-label">Final BP</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5.1%</div>
+                <div class="stat-label">Final HbA1c</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete conversation data including Month 1, Month 2, and Weeks 8-32
+        const weeklyConversations = generateCompleteConversations();
+        let currentWeek = 1;
+        let displayMode = 'single';
+        
+        function generateCompleteConversations() {
+            const conversations = {};
+            
+            // MONTH 1 CONVERSATIONS (Weeks 1-4)
+            conversations.week1 = [
+                {
+                    sender: "Maya (Concierge)",
+                    role: "concierge",
+                    message: "Hi Rohan! 👋 Welcome to Elyx! I'm Maya, your dedicated concierge. I'll be coordinating your healthcare journey. Are you ready to get started?",
+                    time: "09:00",
+                    date: "Jan 1",
+                    type: "onboarding"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Maya! Yes, absolutely. I'm excited to finally prioritize my health properly.",
+                    time: "09:15",
+                    date: "Jan 1"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Hello Rohan, I'm Dr. Sharma, your primary physician at Elyx. Let's start with your medical history. Any current medications or chronic conditions?",
+                    time: "10:00",
+                    date: "Jan 2",
+                    type: "medical"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Doctor. I'm pre-diabetic (HbA1c was 6.2 last check). Taking metformin 500mg daily. Family history of diabetes and hypertension.",
+                    time: "10:30",
+                    date: "Jan 2"
+                },
+                {
+                    sender: "Maya (Concierge)",
+                    role: "concierge",
+                    message: "Your comprehensive health assessment is scheduled for Thursday 8 AM at Elyx Diagnostics, Bandra. 12-hour fasting required.",
+                    time: "16:00",
+                    date: "Jan 5"
+                }
+            ];
+
+            conversations.week2 = [
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Hi Rohan, just reviewed your results. Overall good news! HbA1c is 6.1 (improvement!), but we need to address vitamin D deficiency and slightly elevated cholesterol.",
+                    time: "14:30",
+                    date: "Jan 8",
+                    type: "results"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "Hi Rohan! I'm Priya, your nutritionist. Dr. Sharma shared your results. Let's work on a travel-friendly meal plan. What's your current eating pattern?",
+                    time: "10:00",
+                    date: "Jan 9"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Hi Priya! Honestly, it's erratic. Lots of client dinners, airport food, irregular timings. I skip breakfast often.",
+                    time: "10:30",
+                    date: "Jan 9"
+                },
+                {
+                    sender: "Alex (PT Coach)",
+                    role: "pt",
+                    message: "Hey Rohan! Alex here, your personal trainer. Ready to get moving? 💪 What's your current activity level?",
+                    time: "17:00",
+                    date: "Jan 10"
+                }
+            ];
+
+            conversations.week3 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Priya, tried your breakfast suggestions this week. The overnight oats worked well, but struggled with portion control during client dinner yesterday 😅",
+                    time: "08:00",
+                    date: "Jan 15"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "That's totally normal! Client dinners are tricky. Try eating a small protein snack 2 hours before. Progress not perfection! 👍",
+                    time: "09:00",
+                    date: "Jan 15"
+                },
+                {
+                    sender: "Alex (PT Coach)",
+                    role: "pt",
+                    message: "Rohan! Ready for your first workout plan? I've designed a 20-min hotel room routine. No equipment needed. When can you start?",
+                    time: "18:00",
+                    date: "Jan 16"
+                }
+            ];
+
+            conversations.week4 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Alex! Did it twice so far 💪 Modified push-ups are humbling though 😅 Hotel gym is decent, might add some cardio tomorrow",
+                    time: "20:00",
+                    date: "Jan 22"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Rohan, fantastic first month! Key wins: 3 workouts completed, 70% nutrition adherence, vitamin D supplement started. Ready for month 2 goals?",
+                    time: "10:00",
+                    date: "Jan 30",
+                    type: "milestone"
+                },
+                {
+                    sender: "Maya (Concierge)",
+                    role: "concierge",
+                    message: "Month 1 complete! 🎉 You're building great habits. Month 2 focus: sleep optimization and increasing workout frequency.",
+                    time: "11:00",
+                    date: "Jan 30",
+                    type: "milestone"
+                }
+            ];
+
+            // MONTH 2 CONVERSATIONS (Weeks 5-8)
+            conversations.week5 = [
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Good morning Rohan! I've reviewed your comprehensive test results. Overall, very encouraging findings. Your lipid panel shows improvement, and inflammatory markers are within normal range.",
+                    time: "09:15",
+                    date: "Feb 1",
+                    type: "results"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "That's great to hear! What about the areas we were concerned about?",
+                    time: "09:18",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Your HbA1c is 6.1% - borderline prediabetic range. This aligns with your family history. The good news is it's completely manageable with targeted interventions. Vitamin D is low at 18 ng/ml, which could explain some fatigue.",
+                    time: "09:22",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Hi Rohan! I'm coordinating your care team meeting this afternoon. Dr. Sharma, our nutritionist Priya, and PT coach Mike will create your personalized protocol. Expect a comprehensive plan by evening.",
+                    time: "10:30",
+                    date: "Feb 1"
+                }
+            ];
+
+            conversations.week6 = [
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Good morning! Your Freestyle Libre CGM arrives today. I've also prepared your Singapore travel health pack - restaurant recommendations, gym partnerships, and supplement organizer.",
+                    time: "08:00",
+                    date: "Feb 5"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Day 3 with CGM - fascinating data! My glucose spikes after conference breakfast pastries but stays stable with eggs and avocado. Is 140 mg/dl after meals concerning?",
+                    time: "10:15",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "140 mg/dl post-meal is acceptable, but ideally we want <120. The pattern recognition is exactly why we're using CGM! This data helps us fine-tune your plan in real-time.",
+                    time: "10:30",
+                    date: "Feb 8"
+                }
+            ];
+
+            conversations.week7 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Back in Mumbai! Travel went better than expected. Ready to get back to the full routine. Can we review my CGM data?",
+                    time: "09:00",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Dr. Alex (Performance Scientist)",
+                    role: "scientist",
+                    message: "Your 2-week CGM data is impressive! Average glucose: 108 mg/dl (excellent), time in range: 78% (good, targeting 85%), dawn phenomenon present but mild. You're responding beautifully to interventions.",
+                    time: "11:30",
+                    date: "Feb 12",
+                    type: "data"
+                }
+            ];
+
+            conversations.week8 = [
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Monthly progress review: Weight down 3.2 kg (mostly visceral fat), energy levels up significantly, sleep quality improved per your wearable data. Your body is transforming at the cellular level.",
+                    time: "09:00",
+                    date: "Feb 19",
+                    type: "milestone"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I can feel the difference! Clothes fit better, no more 3 PM energy crashes. What do my biomarkers predict for the next phase?",
+                    time: "09:15",
+                    date: "Feb 19"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "End of month 2 assessment: You've exceeded our most optimistic projections. Your commitment to the protocol, combined with real-time adjustments, has created remarkable results. Ready for month 3?",
+                    time: "18:00",
+                    date: "Feb 28",
+                    type: "milestone",
+                    alert: "success"
+                }
+            ];
+
+            // EXTENDED IMPLEMENTATION (Weeks 9-32)
+            conversations.week9 = [
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Good morning Rohan! Weekly check-in: How did the new workout intensity feel? Any concerns before your Dubai trip?",
+                    time: "08:00",
+                    date: "Mar 4",
+                    type: "checkin"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Morning Sarah! The workouts are challenging but good. Slight concern - my BP readings have been elevated this week. Stress from the merger deal perhaps?",
+                    time: "08:15",
+                    date: "Mar 4"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Let's monitor this closely. What readings are you seeing? The combination of new exercise intensity + work stress could be a factor. Let's adjust.",
+                    time: "08:45",
+                    date: "Mar 4",
+                    type: "medical"
+                }
+            ];
+
+            conversations.week12 = [
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Quarterly lab results are in! 🎉 HbA1c down to 5.8% (from 6.1%), lipids excellent, liver markers perfect. The BP medication + lifestyle changes are working beautifully.",
+                    time: "10:30",
+                    date: "Apr 1",
+                    type: "milestone",
+                    alert: "success"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "That's incredible! I feel like a different person. Energy is through the roof, even with the work stress.",
+                    time: "10:45",
+                    date: "Apr 1"
+                }
+            ];
+
+            conversations.week16 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Quick question - traveling to London next week. My Garmin shows I've been overtraining (performance condition declining). Should I deload?",
+                    time: "11:20",
+                    date: "Apr 29"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "Absolutely! Your body stress score has been red for 3 days. Let's do mobility and light cardio only this week. London hotel gym has a great pool - use it!",
+                    time: "11:35",
+                    date: "Apr 29",
+                    type: "adjustment"
+                }
+            ];
+
+            conversations.week20 = [
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Weekly check-in + exciting news! We've partnered with a Michelin-starred healthy restaurant in Tokyo for your upcoming trip. Pre-booked 3 dinners aligned with your macros 🍱",
+                    time: "09:00",
+                    date: "May 27",
+                    type: "checkin"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "You guys are unreal! This level of service... I'm telling all my CEO friends about Elyx. Question: can we adjust my meal timing for the jet lag?",
+                    time: "09:15",
+                    date: "May 27"
+                }
+            ];
+
+            conversations.week24 = [
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Mid-journey check: 6 months in! Your transformation metrics: Weight -7.2kg, HbA1c 5.4%, BP well-controlled on low-dose medication. You've essentially reversed prediabetes! 🏆",
+                    time: "08:30",
+                    date: "Jun 24",
+                    type: "milestone",
+                    alert: "success"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Mind = blown. Six months ago I was heading toward diabetes and felt exhausted constantly. Now I feel 10 years younger!",
+                    time: "08:45",
+                    date: "Jun 24"
+                }
+            ];
+
+            conversations.week28 = [
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Houston, we have a problem. Conference food for 4 days straight, zero gym access, and my BP spiked to 155/92 this morning. Feeling awful. 😞",
+                    time: "07:20",
+                    date: "Jul 22",
+                    type: "emergency",
+                    alert: "emergency"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Don't panic! This is exactly why we track everything. Temporary spikes happen. Double your meditation today, increase BP meds to 7.5mg, and let's get you back on track. How's your hydration?",
+                    time: "07:35",
+                    date: "Jul 22",
+                    type: "emergency"
+                }
+            ];
+
+            conversations.week32 = [
+                {
+                    sender: "Marcus (Relationship Manager)",
+                    role: "rm",
+                    message: "8-month milestone! 🎊 Your journey stats: 67% average adherence (excellent for your lifestyle), 38.5 doctor hours, 1,247 total interactions. Final results: HbA1c 5.1%, Weight -9.2kg, BP 118/75. You've completely transformed your health trajectory!",
+                    time: "16:00",
+                    date: "Aug 19",
+                    type: "milestone",
+                    alert: "success"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "This has been absolutely life-changing. From pre-diabetic and exhausted to optimal health and energy. The Elyx model works - comprehensive, personalized, and incredibly supportive. What's the maintenance protocol?",
+                    time: "16:15",
+                    date: "Aug 19"
+                }
+            ];
+
+            // Fill in remaining weeks with realistic patterns
+            for (let week = 10; week <= 31; week++) {
+                if (!conversations[`week${week}`]) {
+                    conversations[`week${week}`] = generateWeekPattern(week);
+                }
+            }
+
+            return conversations;
+        }
+        
+        function generateWeekPattern(weekNum) {
+            const patterns = [
+                // Weekly check-in from concierge
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: getWeeklyCheckInMessage(weekNum),
+                    time: "08:00",
+                    date: getDateForWeek(weekNum),
+                    type: "checkin"
+                },
+                // Rohan's response/question
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: getRohanQuestion(weekNum),
+                    time: "08:30",
+                    date: getDateForWeek(weekNum)
+                }
+            ];
+
+            // Add biweekly PT updates
+            if (weekNum % 2 === 0) {
+                patterns.push({
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: getPTUpdate(weekNum),
+                    time: "17:00",
+                    date: getDateForWeek(weekNum),
+                    type: "biweekly"
+                });
+            }
+
+            // Add quarterly diagnostics
+            if (weekNum % 12 === 0) {
+                patterns.push({
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: getQuarterlyResults(weekNum),
+                    time: "10:00",
+                    date: getDateForWeek(weekNum),
+                    type: "milestone",
+                    alert: "success"
+                });
+            }
+
+            return patterns;
+        }
+
+        function getWeeklyCheckInMessage(week) {
+            const messages = [
+                "Weekly check-in! How's energy and motivation this week?",
+                "Good morning! Any challenges with the current protocol?",
+                "How did the travel adjustments work out?",
+                "Weekly pulse check - sleep quality and stress levels?",
+                "Morning! Any wearable data concerns this week?"
+            ];
+            return messages[week % messages.length];
+        }
+
+        function getRohanQuestion(week) {
+            const questions = [
+                "Energy is great but noticed my RHR trending up slightly. Normal?",
+                "Travel was smooth thanks to your prep! Question about meal timing...",
+                "Feeling strong but sleep has been inconsistent. Any suggestions?",
+                "The new supplements seem to be working. When do we reassess?",
+                "Quick question about my Garmin data - recovery scores declining?"
+            ];
+            return questions[week % questions.length];
+        }
+
+        function getPTUpdate(week) {
+            const updates = [
+                "Biweekly check: Strength gains solid, let's increase volume by 10%",
+                "Your form videos look excellent! Ready for advanced progressions?",
+                "Recovery metrics suggest we should maintain current intensity",
+                "Great consistency! Let's add some power-focused sessions"
+            ];
+            return updates[(week/2) % updates.length];
+        }
+
+        function getQuarterlyResults(week) {
+            const results = [
+                "Quarterly labs: HbA1c 5.8%, lipids excellent, inflammation markers down 40%!",
+                "Mid-year results: HbA1c 5.4%, BP well-controlled, liver function perfect!",
+                "Q3 results: All biomarkers in optimal range. You've reversed metabolic dysfunction!"
+            ];
+            return results[(week/12) % results.length];
+        }
+
+        function getDateForWeek(week) {
+            const startDate = new Date('2024-01-01');
+            const weekDate = new Date(startDate.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000);
+            return weekDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        }
+
+        function initializeTimeline() {
+            const nav = document.getElementById('timelineNav');
+            for (let week = 1; week <= 32; week++) {
+                const btn = document.createElement('button');
+                btn.className = 'timeline-btn';
+                btn.textContent = `W${week}`;
+                btn.onclick = () => showWeek(week);
+                
+                // Mark different phases
+                if (week <= 4) {
+                    btn.classList.add('month1');
+                } else if (week <= 8) {
+                    btn.classList.add('month2');
+                }
+                
+                // Mark milestone weeks
+                if (week % 12 === 0 || week === 24) {
+                    btn.classList.add('milestone');
+                }
+                
+                nav.appendChild(btn);
+            }
+        }
+
+        function showWeek(week) {
+            currentWeek = week;
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            // Add week divider
+            const divider = document.createElement('div');
+            divider.className = 'week-divider';
+            divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+            container.appendChild(divider);
+
+            // Show conversations for this week
+            const messages = weeklyConversations[`week${week}`] || [];
+            messages.forEach((msg, index) => {
+                setTimeout(() => addMessage(msg), index * 200);
+            });
+
+            // Update active button
+            document.querySelectorAll('.timeline-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === `W${week}`) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function addMessage(msg) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.role === 'member' ? 'sent' : 'received'}`;
+            
+            const roleClass = `role-${msg.role}`;
+            let alertClass = '';
+            
+            if (msg.alert) {
+                alertClass = `${msg.alert}-alert`;
+            }
+            
+            if (msg.type === 'milestone') {
+                alertClass += ' milestone-message';
+            }
+
+            messageDiv.innerHTML = `
+                <div class="message-content ${roleClass} ${alertClass}">
+                    ${msg.role !== 'member' ? `<div class="sender-name">${msg.sender}</div>` : ''}
+                    <div>${msg.message}</div>
+                    <div class="timestamp">${msg.time} • ${msg.date}</div>
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showFullMonth1() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = '📱 MONTH 1: Onboarding & Foundation Building';
+            container.appendChild(titleDiv);
+
+            for (let week = 1; week <= 4; week++) {
+                const divider = document.createElement('div');
+                divider.className = 'week-divider';
+                divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                container.appendChild(divider);
+
+                const messages = weeklyConversations[`week${week}`] || [];
+                messages.forEach(msg => addMessage(msg));
+            }
+        }
+
+        function showFullMonth2() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = '📊 MONTH 2: Test Results & Plan Development';
+            container.appendChild(titleDiv);
+
+            for (let week = 5; week <= 8; week++) {
+                const divider = document.createElement('div');
+                divider.className = 'week-divider';
+                divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                container.appendChild(divider);
+
+                const messages = weeklyConversations[`week${week}`] || [];
+                messages.forEach(msg => addMessage(msg));
+            }
+        }
+
+        function showMilestones() {
+            const milestoneWeeks = [4, 8, 12, 24, 32];
+            showMultipleWeeks(milestoneWeeks, '🎯 Major Milestone Moments');
+        }
+
+        function showCriticalMoments() {
+            const criticalWeeks = [8, 16, 28];
+            showMultipleWeeks(criticalWeeks, '⚠️ Critical Health Moments');
+        }
+
+        function showTravelWeeks() {
+            const travelWeeks = [6, 10, 16, 20, 26];
+            showMultipleWeeks(travelWeeks, '✈️ Travel Adaptations');
+        }
+
+        function showMultipleWeeks(weeks, title) {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = title;
+            container.appendChild(titleDiv);
+
+            weeks.forEach(week => {
+                const divider = document.createElement('div');
+                divider.className = 'week-divider';
+                divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                container.appendChild(divider);
+
+                const messages = weeklyConversations[`week${week}`] || [];
+                messages.forEach(msg => addMessage(msg));
+            });
+        }
+
+        function playFullJourney() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'month-divider';
+            titleDiv.textContent = '🚀 COMPLETE 8-MONTH TRANSFORMATION JOURNEY';
+            container.appendChild(titleDiv);
+
+            let delay = 0;
+            for (let week = 1; week <= 32; week++) {
+                setTimeout(() => {
+                    const divider = document.createElement('div');
+                    divider.className = 'week-divider';
+                    
+                    // Add month markers
+                    if (week === 1) divider.textContent = '📱 MONTH 1: Foundation';
+                    else if (week === 5) divider.textContent = '📊 MONTH 2: Development';
+                    else if (week === 9) divider.textContent = '💪 MONTH 3: Implementation';
+                    else if (week === 13) divider.textContent = '🎯 MONTH 4: Optimization';
+                    else if (week === 17) divider.textContent = '✈️ MONTH 5: Travel Mastery';
+                    else if (week === 21) divider.textContent = '🏆 MONTH 6: Peak Performance';
+                    else if (week === 25) divider.textContent = '🔬 MONTH 7: Fine-tuning';
+                    else if (week === 29) divider.textContent = '🎊 MONTH 8: Completion';
+                    else divider.textContent = `Week ${week} - ${getDateForWeek(week)}`;
+                    
+                    container.appendChild(divider);
+
+                    const messages = weeklyConversations[`week${week}`] || [];
+                    messages.forEach((msg, index) => {
+                        setTimeout(() => addMessage(msg), index * 100);
+                    });
+                }, delay);
+                
+                delay += 1000;
+            }
+        }
+
+        function resetView() {
+            document.getElementById('chatContainer').innerHTML = '';
+            document.querySelectorAll('.timeline-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTimeline();
+            showWeek(1); // Start with week 1
+        });
+    </script>
+</body>
+</html>
