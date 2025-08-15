@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elyx WhatsApp Conversations - Month 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .filter-btn.active {
+            background: #25D366;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #25D366;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .conversation-area {
+            height: 600px;
+            overflow-y: auto;
+            padding: 20px 30px;
+        }
+        
+        .day-header {
+            text-align: center;
+            margin: 30px 0 20px 0;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .message-group {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .message.rohan {
+            background: linear-gradient(135deg, #dcf8c6, #b8e6b8);
+            flex-direction: row-reverse;
+        }
+        
+        .message.elyx {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        }
+        
+        .message.coordination {
+            background: linear-gradient(135deg, #fff3e0, #ffcc80);
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.8em;
+            flex-shrink: 0;
+        }
+        
+        .avatar.rohan {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        
+        .avatar.elyx {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+        
+        .avatar.coordination {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .sender-name {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .message-text {
+            line-height: 1.5;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+        
+        .timestamp {
+            font-size: 0.8em;
+            color: #6c757d;
+            text-align: right;
+        }
+        
+        .rohan .timestamp {
+            text-align: left;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% {
+                color: rgba(0,0,0,0);
+                text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);
+            }
+            40% {
+                color: #6c757d;
+                text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);
+            }
+            60% {
+                text-shadow: .25em 0 0 #6c757d, .5em 0 0 rgba(0,0,0,0);
+            }
+            80%, 100% {
+                text-shadow: .25em 0 0 #6c757d, .5em 0 0 #6c757d;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .conversation-area {
+                height: 500px;
+                padding: 15px;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Elyx Health Platform</h1>
+            <p>WhatsApp Conversations - Rohan Patel's First Month</p>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Conversations</button>
+                <button class="filter-btn" data-filter="rohan">Rohan Messages</button>
+                <button class="filter-btn" data-filter="doctor">Dr. Sharma</button>
+                <button class="filter-btn" data-filter="concierge">Maya (Concierge)</button>
+                <button class="filter-btn" data-filter="coordination">Sarah Coordination</button>
+                <button class="filter-btn" data-filter="nutritionist">Nutritionist</button>
+                <button class="filter-btn" data-filter="pt">Personal Trainer</button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-messages">0</div>
+                    <div class="stat-label">Total Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="rohan-messages">0</div>
+                    <div class="stat-label">Rohan's Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="team-messages">0</div>
+                    <div class="stat-label">Team Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-days">0</div>
+                    <div class="stat-label">Active Days</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conversation-area" id="conversation-area">
+            <div class="loading">Loading conversations</div>
+        </div>
+    </div>
+
+    <script>
+        class WhatsAppConversationGenerator {
+            constructor() {
+                this.conversations = [];
+                this.startDate = new Date(2024, 0, 1, 9, 0); // January 1, 2024, 9:00 AM
+                
+                this.teamMembers = {
+                    "concierge": "Maya (Elyx Concierge)",
+                    "doctor": "Dr. Sharma",
+                    "nutritionist": "Priya (Nutritionist)",
+                    "pt": "Alex (Personal Trainer)",
+                    "performance_scientist": "Dr. Chen (Performance Scientist)",
+                    "relationship_manager": "Raj (Relationship Manager)"
+                };
+                
+                this.rohanProfile = {
+                    name: "Rohan Patel",
+                    age: 42,
+                    occupation: "Tech Executive",
+                    chronicCondition: "Pre-diabetes",
+                    travelFrequency: "High (1 week/month)",
+                    adherenceRate: 0.5,
+                    personalManager: "Sarah"
+                };
+            }
+            
+            generateTimestamp(baseDate, hourOffset = 0, minuteOffset = 0) {
+                const date = new Date(baseDate.getTime() + (hourOffset * 60 * 60 * 1000) + (minuteOffset * 60 * 1000));
+                return date.toLocaleString('en-IN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            addMessage(date, sender, recipient, message, hourOffset = 0, minuteOffset = 0) {
+                this.conversations.push({
+                    timestamp: this.generateTimestamp(date, hourOffset, minuteOffset),
+                    date: new Date(date.getTime() + (hourOffset * 60 * 60 * 1000) + (minuteOffset * 60 * 1000)),
+                    sender: sender,
+                    recipient: recipient,
+                    message: message
+                });
+            }
+            
+            generateMonth1Conversations() {
+                // Day 1-2: Initial onboarding
+                const day1 = new Date(this.startDate);
+                
+                this.addMessage(day1, this.teamMembers.concierge, "Rohan Patel", 
+                    "Hi Rohan! 👋 Welcome to Elyx! I'm Maya, your dedicated concierge. I'll be coordinating your healthcare journey. Are you ready to get started?");
+                
+                this.addMessage(day1, "Rohan Patel", this.teamMembers.concierge, 
+                    "Hi Maya! Yes, absolutely. I'm excited to finally prioritize my health properly.", 0, 15);
+                
+                this.addMessage(day1, this.teamMembers.concierge, "Rohan Patel", 
+                    "Perfect! I understand you're a busy executive. To make this seamless, I'll be coordinating with Sarah, your personal manager. Can you confirm her contact details?", 1);
+                
+                this.addMessage(day1, "Rohan Patel", this.teamMembers.concierge, 
+                    "Yes, Sarah handles my calendar. Her number is +91 98765 43210. She's aware of this program.", 1, 15);
+                
+                // Maya contacts Sarah
+                this.addMessage(day1, this.teamMembers.concierge, "Sarah (Rohan's PA)", 
+                    "Hi Sarah! I'm Maya from Elyx, Rohan's healthcare concierge. He mentioned you manage his schedule. Can we coordinate to ensure his health appointments fit smoothly?", 9);
+                
+                this.addMessage(day1, "Sarah (Rohan's PA)", this.teamMembers.concierge, 
+                    "Hello Maya! Yes, Rohan briefed me. I have his calendar access. What do you need?", 9, 30);
+                
+                // Day 2: Medical history collection
+                const day2 = new Date(day1.getTime() + 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day2, this.teamMembers.doctor, "Rohan Patel", 
+                    "Hello Rohan, I'm Dr. Sharma, your primary physician at Elyx. Let's start with your medical history. Any current medications or chronic conditions?");
+                
+                this.addMessage(day2, "Rohan Patel", this.teamMembers.doctor, 
+                    "Hi Doctor. I'm pre-diabetic (HbA1c was 6.2 last check). Taking metformin 500mg daily. Family history of diabetes and hypertension.", 2);
+                
+                this.addMessage(day2, this.teamMembers.doctor, "Rohan Patel", 
+                    "Thank you. Any allergies, surgeries, or current symptoms you're experiencing?", 2, 15);
+                
+                this.addMessage(day2, "Rohan Patel", this.teamMembers.doctor, 
+                    "No known allergies. Appendectomy in 2010. Recently feeling more fatigued, especially after travel. Sleep isn't great either.", 2, 30);
+                
+                // Day 3: Scheduling coordination
+                const day3 = new Date(day2.getTime() + 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day3, this.teamMembers.concierge, "Sarah (Rohan's PA)", 
+                    "Sarah, Dr. Sharma wants to schedule comprehensive tests for Rohan. We need 3 hours on a weekday morning (fasting required). What works this week?");
+                
+                this.addMessage(day3, "Sarah (Rohan's PA)", this.teamMembers.concierge, 
+                    "He's traveling Mon-Wed. Thursday 8 AM works, or Friday 7 AM. Which tests exactly?", 1);
+                
+                // Continue with more conversations...
+                const day5 = new Date(day3.getTime() + 2 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day5, this.teamMembers.concierge, "Rohan Patel", 
+                    "Hi Rohan! Your comprehensive health assessment is scheduled for tomorrow (Thursday) 8 AM at Elyx Diagnostics, Bandra. 12-hour fasting required.");
+                
+                this.addMessage(day5, "Rohan Patel", this.teamMembers.concierge, 
+                    "Got it. Sarah blocked my morning. Will the results be available same day?", 3);
+                
+                // Day 6: Results discussion
+                const day6 = new Date(day5.getTime() + 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day6, this.teamMembers.doctor, "Rohan Patel", 
+                    "Hi Rohan, just reviewed your results. Overall good news! HbA1c is 6.1 (improvement!), but we need to address vitamin D deficiency and slightly elevated cholesterol.", 6, 30);
+                
+                this.addMessage(day6, "Rohan Patel", this.teamMembers.doctor, 
+                    "That's encouraging about the HbA1c! What about the fatigue I mentioned?", 6, 45);
+                
+                // Day 7-8: Team introductions
+                const day7 = new Date(day6.getTime() + 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day7, this.teamMembers.nutritionist, "Rohan Patel", 
+                    "Hi Rohan! I'm Priya, your nutritionist. Dr. Sharma shared your results. Let's work on a travel-friendly meal plan. What's your current eating pattern?");
+                
+                this.addMessage(day7, "Rohan Patel", this.teamMembers.nutritionist, 
+                    "Hi Priya! Honestly, it's erratic. Lots of client dinners, airport food, irregular timings. I skip breakfast often.", 2);
+                
+                // Day 8: PT introduction
+                const day8 = new Date(day7.getTime() + 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day8, this.teamMembers.pt, "Rohan Patel", 
+                    "Hey Rohan! Alex here, your personal trainer. Ready to get moving? 💪 What's your current activity level?");
+                
+                this.addMessage(day8, "Rohan Patel", this.teamMembers.pt, 
+                    "Hi Alex! Pretty sedentary honestly. Used to play cricket in college. Now just occasional hotel gym sessions when traveling.", 1);
+                
+                // Day 12: First nutrition consultation
+                const day12 = new Date(day8.getTime() + 4 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day12, "Rohan Patel", this.teamMembers.nutritionist, 
+                    "Priya, tried your breakfast suggestions this week. The overnight oats worked well, but struggled with portion control during client dinner yesterday 😅");
+                
+                this.addMessage(day12, this.teamMembers.nutritionist, "Rohan Patel", 
+                    "That's totally normal! Client dinners are tricky. Try eating a small protein snack 2 hours before. Progress not perfection! 👍", 1);
+                
+                // Day 14: First PT session
+                const day14 = new Date(day12.getTime() + 2 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day14, this.teamMembers.pt, "Rohan Patel", 
+                    "Rohan! Ready for your first workout plan? I've designed a 20-min hotel room routine. No equipment needed. When can you start?");
+                
+                this.addMessage(day14, "Rohan Patel", this.teamMembers.pt, 
+                    "Sounds great! I'm traveling next week. Can you send the routine now so I can try it in the hotel?", 2);
+                
+                // Day 20: Mid-travel check-in
+                const day20 = new Date(day14.getTime() + 6 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day20, this.teamMembers.pt, "Rohan Patel", 
+                    "How's Dubai treating you? Did you manage to squeeze in the workout routine?");
+                
+                this.addMessage(day20, "Rohan Patel", this.teamMembers.pt, 
+                    "Alex! Did it twice so far 💪 Modified push-ups are humbling though 😅 Hotel gym is decent, might add some cardio tomorrow", 4);
+                
+                // Day 24: Return and relationship manager
+                const day24 = new Date(day20.getTime() + 4 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day24, this.teamMembers.relationship_manager, "Rohan Patel", 
+                    "Welcome back Rohan! I'm Raj, your relationship manager. How was your first week with the Elyx program?");
+                
+                this.addMessage(day24, "Rohan Patel", this.teamMembers.relationship_manager, 
+                    "Hi Raj! Honestly impressed. The real-time nutrition advice and having workouts ready made a huge difference. Maya's coordination with Sarah is seamless.", 2);
+                
+                // Day 26: Performance scientist
+                const day26 = new Date(day24.getTime() + 2 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day26, this.teamMembers.performance_scientist, "Rohan Patel", 
+                    "Hi Rohan! Dr. Chen here, performance scientist. Noticed your sleep data from wearable - averaging 5.5 hours. This impacts everything!");
+                
+                this.addMessage(day26, "Rohan Patel", this.teamMembers.performance_scientist, 
+                    "Dr. Chen! Yes, sleep is my biggest challenge. Late calls with US clients, then early morning meetings. How do we fix this?", 1);
+                
+                // Day 30: Month-end review
+                const day30 = new Date(day26.getTime() + 4 * 24 * 60 * 60 * 1000);
+                
+                this.addMessage(day30, this.teamMembers.doctor, "Rohan Patel", 
+                    "Rohan, fantastic first month! Key wins: 3 workouts completed, 70% nutrition adherence, vitamin D supplement started. Ready for month 2 goals?");
+                
+                this.addMessage(day30, "Rohan Patel", this.teamMembers.doctor, 
+                    "Dr. Sharma, feeling more energetic already! Yes, let's set month 2 goals. When's my next lab work due?", 1);
+                
+                this.addMessage(day30, this.teamMembers.concierge, "Rohan Patel", 
+                    "Month 1 complete! 🎉 You're building great habits. Month 2 focus: sleep optimization and increasing workout frequency. Sarah has your updated calendar.", 2);
+            }
+            
+            getConversations() {
+                return this.conversations;
+            }
+        }
+        
+        // Initialize and run the generator
+        const generator = new WhatsAppConversationGenerator();
+        generator.generateMonth1Conversations();
+        const conversations = generator.getConversations();
+        
+        // Display functionality
+        let currentFilter = 'all';
+        
+        function getMessageType(sender, recipient) {
+            if (sender === "Rohan Patel") return 'rohan';
+            if (sender.includes("Sarah") || recipient.includes("Sarah")) return 'coordination';
+            return 'elyx';
+        }
+        
+        function getMessageRole(sender) {
+            if (sender === "Rohan Patel") return 'rohan';
+            if (sender.includes("Dr. Sharma")) return 'doctor';
+            if (sender.includes("Maya")) return 'concierge';
+            if (sender.includes("Priya")) return 'nutritionist';
+            if (sender.includes("Alex")) return 'pt';
+            if (sender.includes("Sarah")) return 'coordination';
+            return 'other';
+        }
+        
+        function getAvatar(sender) {
+            if (sender === "Rohan Patel") return 'RP';
+            if (sender.includes("Dr. Sharma")) return 'DS';
+            if (sender.includes("Maya")) return 'MC';
+            if (sender.includes("Priya")) return 'PN';
+            if (sender.includes("Alex")) return 'PT';
+            if (sender.includes("Chen")) return 'DC';
+            if (sender.includes("Raj")) return 'RM';
+            if (sender.includes("Sarah")) return 'SA';
+            return 'EX';
+        }
+        
+        function displayConversations(filter = 'all') {
+            const conversationArea = document.getElementById('conversation-area');
+            conversationArea.innerHTML = '';
+            
+            let filteredConversations = conversations;
+            if (filter !== 'all') {
+                filteredConversations = conversations.filter(conv => {
+                    const role = getMessageRole(conv.sender);
+                    return role === filter || (filter === 'rohan' && conv.sender === 'Rohan Patel');
+                });
+            }
+            
+            // Group by date
+            const groupedByDate = {};
+            filteredConversations.forEach(conv => {
+                const dateKey = conv.date.toDateString();
+                if (!groupedByDate[dateKey]) {
+                    groupedByDate[dateKey] = [];
+                }
+                groupedByDate[dateKey].push(conv);
+            });
+            
+            Object.keys(groupedByDate).forEach(dateKey => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = `📅 ${new Date(dateKey).toLocaleDateString('en-IN', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}`;
+                conversationArea.appendChild(dayHeader);
+                
+                groupedByDate[dateKey].forEach(conv => {
+                    const messageDiv = document.createElement('div');
+                    const messageType = getMessageType(conv.sender, conv.recipient);
+                    messageDiv.className = `message ${messageType}`;
+                    
+                    messageDiv.innerHTML = `
+                        <div class="avatar ${messageType}">${getAvatar(conv.sender)}</div>
+                        <div class="message-content">
+                            <div class="sender-name">${conv.sender} → ${conv.recipient}</div>
+                            <div class="message-text">${conv.message}</div>
+                            <div class="timestamp">${conv.timestamp}</div>
+                        </div>
+                    `;
+                    
+                    conversationArea.appendChild(messageDiv);
+                });
+            });
+        }
+        
+        function updateStats() {
+            const totalMessages = conversations.length;
+            const rohanMessages = conversations.filter(c => c.sender === 'Rohan Patel').length;
+            const teamMessages = totalMessages - rohanMessages;
+            const uniqueDates = [...new Set(conversations.map(c => c.date.toDateString()))].length;
+            
+            document.getElementById('total-messages').textContent = totalMessages;
+            document.getElementById('rohan-messages').textContent = rohanMessages;
+            document.getElementById('team-messages').textContent = teamMessages;
+            document.getElementById('active-days').textContent = uniqueDates;
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            displayConversations();
+            updateStats();
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    displayConversations(currentFilter);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

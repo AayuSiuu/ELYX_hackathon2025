@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elyx Health Journey - Month 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #075e54;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .controls {
+            background: #f0f0f0;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 8px 15px;
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: #1eb352;
+        }
+        
+        .control-btn.active {
+            background: #007bb5;
+        }
+        
+        .chat-container {
+            height: 600px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #e5ddd5;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e5ddd5"/><circle cx="10" cy="10" r="1" fill="%23d1c7b8" opacity="0.3"/><circle cx="90" cy="90" r="1" fill="%23d1c7b8" opacity="0.3"/></svg>');
+        }
+        
+        .message {
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-end;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .message.sent .message-content {
+            background: #dcf8c6;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.received .message-content {
+            background: white;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .message-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .sender-name {
+            font-weight: bold;
+            color: #075e54;
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+        
+        .timestamp {
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .role-doctor { border-left: 3px solid #e74c3c; }
+        .role-nutritionist { border-left: 3px solid #f39c12; }
+        .role-pt { border-left: 3px solid #3498db; }
+        .role-concierge { border-left: 3px solid #9b59b6; }
+        .role-scientist { border-left: 3px solid #1abc9c; }
+        .role-rm { border-left: 3px solid #34495e; }
+        
+        .progress-bar {
+            background: #ecf0f1;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #25d366;
+            border-radius: 2px;
+            transition: width 2s ease-in-out;
+        }
+        
+        .stats {
+            background: white;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #075e54;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Elyx Health Journey - Month 2</h1>
+            <p>Plan Development & Test Results Analysis</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 25%"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn active" onclick="showWeek(1)">Week 5</button>
+            <button class="control-btn" onclick="showWeek(2)">Week 6</button>
+            <button class="control-btn" onclick="showWeek(3)">Week 7</button>
+            <button class="control-btn" onclick="showWeek(4)">Week 8</button>
+            <button class="control-btn" onclick="playAll()">Play All</button>
+            <button class="control-btn" onclick="resetChat()">Reset</button>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <!-- Messages will be populated by JavaScript -->
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Total Messages</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4.2</div>
+                <div class="stat-label">Doctor Hours</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">3.8</div>
+                <div class="stat-label">Coach Hours</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">68%</div>
+                <div class="stat-label">Plan Adherence</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const conversations = {
+            week1: [ // Week 5 - Test Results Discussion
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Good morning Rohan! I've reviewed your comprehensive test results. Overall, very encouraging findings. Your lipid panel shows improvement, and inflammatory markers are within normal range.",
+                    time: "09:15",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "That's great to hear! What about the areas we were concerned about?",
+                    time: "09:18",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Your HbA1c is 6.1% - borderline prediabetic range. This aligns with your family history. The good news is it's completely manageable with targeted interventions. Vitamin D is low at 18 ng/ml, which could explain some fatigue.",
+                    time: "09:22",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I suspected the prediabetes. My dad had similar issues. What's the plan?",
+                    time: "09:25",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Hi Rohan! I'm coordinating your care team meeting this afternoon. Dr. Sharma, our nutritionist Priya, and PT coach Mike will create your personalized protocol. Expect a comprehensive plan by evening.",
+                    time: "10:30",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Perfect timing! I'm traveling to Singapore next week for work. Can we factor that in?",
+                    time: "10:32",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Absolutely! We'll create travel-specific recommendations. Singapore has excellent health food options - I'll prepare a location guide.",
+                    time: "10:35",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "Hi Rohan! Based on your results and travel schedule, I'm designing a flexible meal plan focusing on glycemic control. Question: How do you feel about intermittent fasting?",
+                    time: "14:20",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I've tried it before with mixed results. Usually skip breakfast naturally due to early meetings.",
+                    time: "14:45",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "Perfect! We'll structure a 16:8 pattern around your natural rhythm. This will help with insulin sensitivity. I'm also recommending specific supplements for your travel days.",
+                    time: "14:50",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "Hey Rohan! Excited to work with you. Your fitness assessment shows good cardiovascular base but we need to focus on insulin sensitivity through resistance training. Can you commit to 4 sessions per week?",
+                    time: "16:15",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "4 sessions sounds ambitious with my travel schedule. Can we start with 3 and adjust?",
+                    time: "16:20",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "Absolutely! Quality over quantity. I'll design hotel room workouts for your travel weeks. Let's focus on compound movements and HIIT for maximum metabolic impact.",
+                    time: "16:25",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Team sync complete! Rohan, here's your integrated protocol: 1) 16:8 intermittent fasting 2) Mediterranean-style low glycemic diet 3) 3x/week strength training + 2x cardio 4) Vitamin D3 4000 IU daily 5) Continuous glucose monitor for 2 weeks to understand your patterns",
+                    time: "18:30",
+                    date: "Feb 1"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "This sounds comprehensive but manageable. When do we start the glucose monitoring?",
+                    time: "18:35",
+                    date: "Feb 1"
+                }
+            ],
+            
+            week2: [ // Week 6 - Plan Implementation & Singapore Travel
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "Good morning! Your Freestyle Libre CGM arrives today. I've also prepared your Singapore travel health pack - restaurant recommendations, gym partnerships, and supplement organizer.",
+                    time: "08:00",
+                    date: "Feb 5"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Received everything! The travel pack is incredibly detailed. Quick question - any specific foods to avoid in Singapore?",
+                    time: "08:30",
+                    date: "Feb 5"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "Singapore's hawker centers are amazing! Avoid: char kway teow, sugary drinks, white rice dishes. Embrace: fish head curry (moderate rice), satay (skip peanut sauce), steamed fish, vegetables. I've marked CGM-friendly options on your map.",
+                    time: "09:00",
+                    date: "Feb 5"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Day 3 with CGM - fascinating data! My glucose spikes after conference breakfast pastries but stays stable with eggs and avocado. Is 140 mg/dl after meals concerning?",
+                    time: "10:15",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "140 mg/dl post-meal is acceptable, but ideally we want <120. The pattern recognition is exactly why we're using CGM! This data helps us fine-tune your plan in real-time.",
+                    time: "10:30",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "How's the hotel gym treating you? Remember - even 20 minutes of resistance work post-meal can blunt glucose spikes significantly.",
+                    time: "19:00",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Did bodyweight circuits in my room yesterday - glucose dropped from 135 to 98 in 45 minutes! This CGM is like having a personal lab.",
+                    time: "19:15",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Dr. Alex (Performance Scientist)",
+                    role: "scientist",
+                    message: "Excellent observation Rohan! That's exercise-induced glucose uptake in action. Your muscle cells are becoming more insulin sensitive. We're building metabolic flexibility.",
+                    time: "20:00",
+                    date: "Feb 8"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Singapore update: Stuck to the plan 70% of the time. Had laksa twice (couldn't resist!) but did post-meal walks. CGM shows I recover faster now than day 1.",
+                    time: "14:20",
+                    date: "Feb 10"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "70% adherence while traveling is fantastic! Laksa in moderation is fine - life's about balance. Your recovery improvement shows metabolic adaptation is happening.",
+                    time: "14:35",
+                    date: "Feb 10"
+                }
+            ],
+            
+            week3: [ // Week 7 - Back from travel, data analysis
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Back in Mumbai! Travel went better than expected. Ready to get back to the full routine. Can we review my CGM data?",
+                    time: "09:00",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Dr. Alex (Performance Scientist)",
+                    role: "scientist",
+                    message: "Your 2-week CGM data is impressive! Average glucose: 108 mg/dl (excellent), time in range: 78% (good, targeting 85%), dawn phenomenon present but mild. You're responding beautifully to interventions.",
+                    time: "11:30",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "What's dawn phenomenon? I notice higher readings when I wake up.",
+                    time: "11:35",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Dawn phenomenon is normal - your body releases hormones to wake you up, slightly raising glucose. Yours is mild (110-115 mg/dl), showing good metabolic health. Some people see 140+.",
+                    time: "11:40",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "Welcome back! Ready to intensify? Your strength assessments this week, then we'll progress the program. Your consistency during travel earned you an upgrade! 💪",
+                    time: "16:00",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Bring it on! Feeling stronger and more energetic than I have in months.",
+                    time: "16:05",
+                    date: "Feb 12"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "Your food diary shows great choices! One adjustment: let's add more fiber to breakfast. Try chia seed pudding or steel-cut oats with berries. This will flatten your morning glucose curve.",
+                    time: "18:20",
+                    date: "Feb 14"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Made the chia pudding - delicious! Glucose stayed under 100 post-breakfast for the first time. Small changes, big results.",
+                    time: "10:30",
+                    date: "Feb 15"
+                },
+                {
+                    sender: "Marcus (Relationship Manager)",
+                    role: "rm",
+                    message: "Hi Rohan! Monthly check-in - how are you feeling about the program so far? Any concerns or areas where we can improve support?",
+                    time: "14:00",
+                    date: "Feb 16"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Honestly, this is the most supported I've ever felt in a health program. The team coordination is seamless, and seeing real-time data keeps me motivated. Only concern is maintaining this during my crazy March schedule.",
+                    time: "14:15",
+                    date: "Feb 16"
+                },
+                {
+                    sender: "Marcus (Relationship Manager)",
+                    role: "rm",
+                    message: "That's exactly why we're here! Let's schedule a planning session for March. Sarah will help pre-plan your travel logistics, and we'll adjust protocols for busy periods.",
+                    time: "14:20",
+                    date: "Feb 16"
+                }
+            ],
+            
+            week4: [ // Week 8 - Optimization and March planning
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "Monthly progress review: Weight down 3.2 kg (mostly visceral fat), energy levels up significantly, sleep quality improved per your wearable data. Your body is transforming at the cellular level.",
+                    time: "09:00",
+                    date: "Feb 19"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "I can feel the difference! Clothes fit better, no more 3 PM energy crashes. What do my biomarkers predict for the next phase?",
+                    time: "09:15",
+                    date: "Feb 19"
+                },
+                {
+                    sender: "Dr. Alex (Performance Scientist)",
+                    role: "scientist",
+                    message: "Based on your data trends, I predict your HbA1c will drop to 5.7% by month 4 if you maintain current adherence. Insulin sensitivity is improving 2-3% weekly. You're literally rewinding metabolic aging.",
+                    time: "10:30",
+                    date: "Feb 19"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "Strength gains are accelerating! Bench press +15%, deadlift +20%, and your recovery heart rate is down 12 BPM. Ready for phase 2 programming?",
+                    time: "17:00",
+                    date: "Feb 20"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "Yes! What's phase 2?",
+                    time: "17:05",
+                    date: "Feb 20"
+                },
+                {
+                    sender: "Mike (PT Coach)",
+                    role: "pt",
+                    message: "Phase 2 focuses on power and athletic performance. We'll add plyometrics, Olympic lift variations, and sport-specific training. Your metabolic improvements support higher intensity now.",
+                    time: "17:10",
+                    date: "Feb 20"
+                },
+                {
+                    sender: "Sarah (Concierge)",
+                    role: "concierge",
+                    message: "March travel calendar received! 3 cities, 2 countries. I'm preparing customized protocols for each location, including gym partnerships and meal delivery services.",
+                    time: "11:00",
+                    date: "Feb 22"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "You guys are incredible. This level of support makes maintaining the program feel effortless even with a hectic schedule.",
+                    time: "11:30",
+                    date: "Feb 22"
+                },
+                {
+                    sender: "Priya (Nutritionist)",
+                    role: "nutritionist",
+                    message: "For March travels, I'm introducing meal timing optimization. We'll use your circadian rhythm and time zones to enhance metabolic benefits. Think of it as 'chrono-nutrition' 🕐",
+                    time: "15:20",
+                    date: "Feb 23"
+                },
+                {
+                    sender: "Dr. Sharma",
+                    role: "doctor",
+                    message: "End of month 2 assessment: You've exceeded our most optimistic projections. Your commitment to the protocol, combined with real-time adjustments, has created remarkable results. Ready for month 3?",
+                    time: "18:00",
+                    date: "Feb 28"
+                },
+                {
+                    sender: "Rohan",
+                    role: "member",
+                    message: "More than ready! This has been transformative. I feel like I have a personal healthcare army. Let's keep building on this momentum!",
+                    time: "18:15",
+                    date: "Feb 28"
+                }
+            ]
+        };
+
+        let currentMessages = [];
+        let messageIndex = 0;
+        let autoPlay = false;
+        
+        function showWeek(week) {
+            resetChat();
+            const weekKey = 'week' + week;
+            currentMessages = conversations[weekKey] || [];
+            
+            // Update active button
+            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            displayMessages();
+        }
+        
+        function displayMessages() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+            
+            currentMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    addMessage(msg);
+                }, index * 300);
+            });
+        }
+        
+        function addMessage(msg) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.role === 'member' ? 'sent' : 'received'}`;
+            
+            const roleClass = `role-${msg.role}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-content ${roleClass}">
+                    ${msg.role !== 'member' ? `<div class="sender-name">${msg.sender}</div>` : ''}
+                    <div>${msg.message}</div>
+                    <div class="message-info">
+                        <span class="timestamp">${msg.time} • ${msg.date}</span>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function playAll() {
+            resetChat();
+            const allMessages = [
+                ...conversations.week1,
+                ...conversations.week2,
+                ...conversations.week3,
+                ...conversations.week4
+            ];
+            
+            currentMessages = allMessages;
+            displayMessages();
+            
+            // Update progress bar
+            setTimeout(() => {
+                document.getElementById('progressBar').style.width = '50%';
+            }, allMessages.length * 300);
+        }
+        
+        function resetChat() {
+            document.getElementById('chatContainer').innerHTML = '';
+            messageIndex = 0;
+            autoPlay = false;
+        }
+        
+        // Initialize with week 1
+        document.addEventListener('DOMContentLoaded', function() {
+            showWeek(1);
+        });
+        
+        // Smooth scrolling for chat container
+        document.getElementById('chatContainer').addEventListener('scroll', function() {
+            // Add scroll effects if needed
+        });
+    </script>
+</body>
+</html>
