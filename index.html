@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elyx Health Journey - Rohan's Transformation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles_biomarker.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.1"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="my-4">
+            <h1 class="display-4">Elyx Health Journey</h1>
+            <h2>Rohan's 8-Month Transformation</h2>
+            <p class="lead">From Onboarding to Optimization</p>
+        </header>
+
+        <!-- Summary Stats -->
+        <section id="summary-stats" class="row mb-4">
+            <!-- Will be populated by JavaScript -->
+        </section>
+
+        <!-- Main Content -->
+        <div class="row">
+            <!-- Left Column -->
+             <!-- Add this in index.html, inside the left column section -->
+<section class="card mb-4">
+    <div class="card-header">
+        <h3>Sleep Efficiency</h3>
+    </div>
+    <div class="card-body">
+        <canvas id="sleepChart" height="250"></canvas>
+    </div>
+</section>
+            <div class="col-md-8">
+                <!-- Biomarker Timeline -->
+                <section id="biomarker-timeline" class="card mb-4">
+                    <div class="card-header">
+                        <h3>Biomarker Progress Timeline</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="timelineChart" height="300"></canvas>
+                    </div>
+                </section>
+
+                <!-- Conversations -->
+                <section id="conversations" class="card mb-4">
+                    <div class="card-header">
+                        <h3>Weekly Conversations</h3>
+                        <select id="week-selector" class="form-select"></select>
+                    </div>
+                    <div class="card-body" id="conversation-container">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-4">
+                <!-- Team Members -->
+                <section id="team-members" class="card mb-4">
+                    <div class="card-header">
+                        <h3>Care Team</h3>
+                    </div>
+                    <div class="card-body" id="team-container">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Milestones -->
+                <section id="milestones" class="card mb-4">
+                    <div class="card-header">
+                        <h3>Key Milestones</h3>
+                    </div>
+                    <div class="card-body" id="milestones-container">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Health Transformation -->
+        <section id="transformation" class="card mb-4">
+            <div class="card-header">
+                <h3>Health Transformation</h3>
+            </div>
+            <div class="card-body">
+                <div class="row" id="transformation-container">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
