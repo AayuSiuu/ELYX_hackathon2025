@@ -1,14 +1,4 @@
-/**
- * ELYX HEALTH DASHBOARD - MAIN APPLICATION CONTROLLER
- * ================================================
- * 
- * This is the brain of the Elyx Health Dashboard application.
- * It handles data fetching, processing, UI rendering, and user interactions.
- * 
- * Author: AI Assistant
- * Version: 1.0.0
- * Last Updated: August 15, 2025
- */
+
 
 // ===== APPLICATION CONFIGURATION =====
 const CONFIG = {
@@ -46,7 +36,117 @@ const CONFIG = {
         heartbeat: 5000 // 5 seconds
     }
 };
-
+    async fetchConversationData() {
+        try {
+            this.setLoading('conversations', true);
+            await this.delay(600);
+            
+            const data = {
+                totalMessages: 1247,
+                topics: MOCK_DATA.conversationTopics,
+                recentMessages: this.generateRecentMessages(),
+                sentimentTrend: this.generateSentimentTrend()
+            };
+            
+            this.setCache('conversations', data, 2 * 60 * 1000); // 2 minute cache
+            return data;
+        } catch (error) {
+            console.error('Failed to fetch conversation data:', error);
+            throw error;
+        } finally {
+            this.setLoading('conversations', false);
+        }
+    }
+    
+    async fetchJourneyData() {
+        try {
+            this.setLoading('journeyData', true);
+            
+            // Check cache first
+            const cached = this.getCache('journeyData');
+            if (cached) {
+                console.log('📋 Using cached journey data');
+                return cached;
+            }
+            
+            console.log('🔄 Fetching journey data from file...');
+            
+            // Fetch the JSON file
+            const response = await fetch('./elyx_journey_json.json');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Parse JSON
+            const journeyData = await response.json();
+            
+            console.log('✅ Journey data fetched successfully', journeyData);
+            
+            // Cache the data for 10 minutes
+            this.setCache('journeyData', journeyData, 10 * 60 * 1000);
+            
+            return journeyData;
+            
+        } catch (error) {
+            console.error('❌ Failed to fetch journey data:', error);
+            
+            // Return mock data as fallback
+            console.log('🔄 Using fallback mock data');
+            const fallbackData = this.generateMockJourneyData();
+            this.setCache('journeyData', fallbackData, 5 * 60 * 1000);
+            return fallbackData;
+            
+        } finally {
+            this.setLoading('journeyData', false);
+        }
+    }
+    
+    generateMockJourneyData() {
+        // Fallback mock data structure matching your JSON
+        return {
+            project: {
+                title: "Elyx Health Journey - Complete 8-Month Timeline",
+                description: "8-Month Health Transformation: From Onboarding to Optimization",
+                duration: "32 weeks",
+                member: "Rohan"
+            },
+            summary_stats: {
+                total_messages: 1247,
+                doctor_hours: 38.5,
+                coach_hours: 52.8,
+                average_adherence: "67%",
+                total_weight_loss: "-9.2kg",
+                final_hba1c: "5.1%",
+                weeks_tracked: 32,
+                workout_sessions: 156,
+                travel_trips: 12,
+                diagnostic_tests: 8,
+                plan_adjustments: 24,
+                final_bp: "118/75"
+            },
+            health_transformations: {
+                baseline: {
+                    hba1c: "6.2%",
+                    status: "Pre-diabetic",
+                    rhr: "72 bpm",
+                    hrv: "28ms",
+                    sleep_efficiency: "68%",
+                    medication: "Metformin 500mg daily"
+                },
+                final: {
+                    hba1c: "5.1%",
+                    status: "Optimal metabolic health",
+                    rhr: "58 bpm",
+                    hrv: "47ms",
+                    sleep_efficiency: "83%",
+                    bp: "118/75",
+                    weight_change: "-9.2kg",
+                    biological_age_change: "-3.4 years"
+                }
+            }
+        };
+    }
 // ===== MOCK DATA STORE =====
 const MOCK_DATA = {
     healthMetrics: {
