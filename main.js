@@ -1,184 +1,175 @@
 
 
 // ===== APPLICATION CONFIGURATION =====
+// ===== APPLICATION CONFIGURATION =====
 const CONFIG = {
-    // API endpoints (mock data for demo)
-    endpoints: {
-        healthData: '/api/health-data',
-        conversationData: '/api/conversations',
-        biomarkers: '/api/biomarkers',
-        teamData: '/api/team'
+  endpoints: {
+    healthData: '/api/health-data',
+    conversationData: '/api/conversations',
+    biomarkers: '/api/biomarkers',
+    teamData: '/api/team'
+  },
+  animations: {
+    duration: 300,
+    easing: 'ease-out',
+    staggerDelay: 100
+  },
+  charts: {
+    colors: {
+      primary: '#00d4ff',
+      secondary: '#1abc9c',
+      accent: '#f39c12',
+      danger: '#e74c3c',
+      success: '#27ae60'
     },
-    
-    // Animation settings
-    animations: {
-        duration: 300,
-        easing: 'ease-out',
-        staggerDelay: 100
-    },
-    
-    // Chart configuration
-    charts: {
-        colors: {
-            primary: '#00d4ff',
-            secondary: '#1abc9c',
-            accent: '#f39c12',
-            danger: '#e74c3c',
-            success: '#27ae60'
-        },
-        responsive: true,
-        maintainAspectRatio: false
-    },
-    
-    // Update intervals
-    intervals: {
-        realTimeUpdates: 30000, // 30 seconds
-        heartbeat: 5000 // 5 seconds
-    }
+    responsive: true,
+    maintainAspectRatio: false
+  },
+  intervals: {
+    realTimeUpdates: 30000,
+    heartbeat: 5000
+  }
 };
-    async fetchConversationData() {
-        try {
-            this.setLoading('conversations', true);
-            await this.delay(600);
-            
-            const data = {
-                totalMessages: 1247,
-                topics: MOCK_DATA.conversationTopics,
-                recentMessages: this.generateRecentMessages(),
-                sentimentTrend: this.generateSentimentTrend()
-            };
-            
-            this.setCache('conversations', data, 2 * 60 * 1000); // 2 minute cache
-            return data;
-        } catch (error) {
-            console.error('Failed to fetch conversation data:', error);
-            throw error;
-        } finally {
-            this.setLoading('conversations', false);
-        }
-    }
-    
-    async fetchJourneyData() {
-        try {
-            this.setLoading('journeyData', true);
-            
-            // Check cache first
-            const cached = this.getCache('journeyData');
-            if (cached) {
-                console.log('📋 Using cached journey data');
-                return cached;
-            }
-            
-            console.log('🔄 Fetching journey data from file...');
-            
-            // Fetch the JSON file
-            const response = await fetch('./elyx_journey_json.json');
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            // Parse JSON
-            const journeyData = await response.json();
-            
-            console.log('✅ Journey data fetched successfully', journeyData);
-            
-            // Cache the data for 10 minutes
-            this.setCache('journeyData', journeyData, 10 * 60 * 1000);
-            
-            return journeyData;
-            
-        } catch (error) {
-            console.error('❌ Failed to fetch journey data:', error);
-            
-            // Return mock data as fallback
-            console.log('🔄 Using fallback mock data');
-            const fallbackData = this.generateMockJourneyData();
-            this.setCache('journeyData', fallbackData, 5 * 60 * 1000);
-            return fallbackData;
-            
-        } finally {
-            this.setLoading('journeyData', false);
-        }
-    }
-    
-    generateMockJourneyData() {
-        // Fallback mock data structure matching your JSON
-        return {
-            project: {
-                title: "Elyx Health Journey - Complete 8-Month Timeline",
-                description: "8-Month Health Transformation: From Onboarding to Optimization",
-                duration: "32 weeks",
-                member: "Rohan"
-            },
-            summary_stats: {
-                total_messages: 1247,
-                doctor_hours: 38.5,
-                coach_hours: 52.8,
-                average_adherence: "67%",
-                total_weight_loss: "-9.2kg",
-                final_hba1c: "5.1%",
-                weeks_tracked: 32,
-                workout_sessions: 156,
-                travel_trips: 12,
-                diagnostic_tests: 8,
-                plan_adjustments: 24,
-                final_bp: "118/75"
-            },
-            health_transformations: {
-                baseline: {
-                    hba1c: "6.2%",
-                    status: "Pre-diabetic",
-                    rhr: "72 bpm",
-                    hrv: "28ms",
-                    sleep_efficiency: "68%",
-                    medication: "Metformin 500mg daily"
-                },
-                final: {
-                    hba1c: "5.1%",
-                    status: "Optimal metabolic health",
-                    rhr: "58 bpm",
-                    hrv: "47ms",
-                    sleep_efficiency: "83%",
-                    bp: "118/75",
-                    weight_change: "-9.2kg",
-                    biological_age_change: "-3.4 years"
-                }
-            }
-        };
-    }
+
 // ===== MOCK DATA STORE =====
 const MOCK_DATA = {
-    healthMetrics: {
-        hba1c: { current: 5.1, previous: 6.2, unit: '%', trend: 'down' },
-        restingHR: { current: 58, previous: 72, unit: 'bpm', trend: 'down' },
-        sleepEfficiency: { current: 83, previous: 68, unit: '%', trend: 'up' },
-        bloodPressure: { current: '118/75', previous: '135/85', unit: 'mmHg', trend: 'down' },
-        biologicalAge: { current: -3.4, previous: 0, unit: 'years', trend: 'down' },
-        weight: { current: 76.8, previous: 86.0, unit: 'kg', trend: 'down' }
-    },
-    
-    timelineData: [
-        { week: 1, hba1c: 6.2, weight: 86.0, sleepScore: 68, stressLevel: 7.2 },
-        { week: 4, hba1c: 6.0, weight: 84.5, sleepScore: 72, stressLevel: 6.8 },
-        { week: 8, hba1c: 5.8, weight: 82.1, sleepScore: 76, stressLevel: 6.2 },
-        { week: 12, hba1c: 5.6, weight: 80.3, sleepScore: 79, stressLevel: 5.8 },
-        { week: 16, hba1c: 5.4, weight: 78.9, sleepScore: 81, stressLevel: 5.4 },
-        { week: 20, hba1c: 5.3, weight: 77.8, sleepScore: 82, stressLevel: 5.1 },
-        { week: 24, hba1c: 5.2, weight: 77.2, sleepScore: 83, stressLevel: 4.9 },
-        { week: 28, hba1c: 5.1, weight: 76.9, sleepScore: 83, stressLevel: 4.7 },
-        { week: 32, hba1c: 5.1, weight: 76.8, sleepScore: 83, stressLevel: 4.5 }
-    ],
-    
-    conversationTopics: [
-        { topic: 'Nutrition Planning', count: 234, sentiment: 'positive' },
-        { topic: 'Exercise Optimization', count: 187, sentiment: 'positive' },
-        { topic: 'Sleep Improvement', count: 156, sentiment: 'neutral' },
-        { topic: 'Stress Management', count: 143, sentiment: 'positive' },
-        { topic: 'Travel Adaptation', count: 89, sentiment: 'positive' },
-        { topic: 'Lab Results Discussion', count: 76, sentiment: 'neutral' }
-    ],
-    
+  healthMetrics: {
+    hba1c: { current: 5.1, previous: 6.2, unit: '%', trend: 'down' },
+    restingHR: { current: 58, previous: 72, unit: 'bpm', trend: 'down' },
+    sleepEfficiency: { current: 83, previous: 68, unit: '%', trend: 'up' },
+    bloodPressure: { current: '118/75', previous: '135/85', unit: 'mmHg', trend: 'down' },
+    biologicalAge: { current: -3.4, previous: 0, unit: 'years', trend: 'down' },
+    weight: { current: 76.8, previous: 86.0, unit: 'kg', trend: 'down' }
+  },
+  timelineData: [
+    { week: 1, hba1c: 6.2, weight: 86.0, sleepScore: 68, stressLevel: 7.2 },
+    { week: 4, hba1c: 6.0, weight: 84.5, sleepScore: 72, stressLevel: 6.8 },
+    { week: 8, hba1c: 5.8, weight: 82.1, sleepScore: 76, stressLevel: 6.2 },
+    { week: 12, hba1c: 5.6, weight: 80.3, sleepScore: 79, stressLevel: 5.8 },
+    { week: 16, hba1c: 5.4, weight: 78.9, sleepScore: 81, stressLevel: 5.4 },
+    { week: 20, hba1c: 5.3, weight: 77.8, sleepScore: 82, stressLevel: 5.1 },
+    { week: 24, hba1c: 5.2, weight: 77.2, sleepScore: 83, stressLevel: 4.9 },
+    { week: 28, hba1c: 5.1, weight: 76.9, sleepScore: 83, stressLevel: 4.7 },
+    { week: 32, hba1c: 5.1, weight: 76.8, sleepScore: 83, stressLevel: 4.5 }
+  ],
+  conversationTopics: [
+    { topic: 'Nutrition Planning', count: 234, sentiment: 'positive' },
+    { topic: 'Exercise Optimization', count: 187, sentiment: 'positive' },
+    { topic: 'Sleep Improvement', count: 156, sentiment: 'neutral' },
+    { topic: 'Stress Management', count: 143, sentiment: 'positive' },
+    { topic: 'Travel Adaptation', count: 89, sentiment: 'positive' },
+    { topic: 'Lab Results Discussion', count: 76, sentiment: 'neutral' }
+  ]
+};
+
+// ===== SIMPLE CACHE & HELPERS =====
+const cache = {};
+function setCache(key, data, ttl) {
+  cache[key] = { data, expiry: Date.now() + ttl };
+}
+function getCache(key) {
+  const c = cache[key];
+  if (c && Date.now() < c.expiry) return c.data;
+  return null;
+}
+function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+// ===== DATA SERVICE =====
+const DataService = {
+  async fetchConversationData() {
+    try {
+      await delay(600); // simulate latency
+      const data = {
+        totalMessages: 1247,
+        topics: MOCK_DATA.conversationTopics,
+        recentMessages: [], // TODO: plug in generator
+        sentimentTrend: [] // TODO: plug in generator
+      };
+      setCache('conversations', data, 2 * 60 * 1000);
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch conversation data:', error);
+      throw error;
+    }
+  },
+
+  async fetchJourneyData() {
+    try {
+      const cached = getCache('journeyData');
+      if (cached) {
+        console.log('📋 Using cached journey data');
+        return cached;
+      }
+
+      console.log('🔄 Fetching journey data from file...');
+      const response = await fetch('/elyx_journey_json.json'); // must be in /public/
+
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const journeyData = await response.json();
+
+      console.log('✅ Journey data fetched successfully', journeyData);
+      setCache('journeyData', journeyData, 10 * 60 * 1000);
+      return journeyData;
+    } catch (error) {
+      console.error('❌ Failed to fetch journey data:', error);
+      console.log('🔄 Using fallback mock data');
+      const fallbackData = this.generateMockJourneyData();
+      setCache('journeyData', fallbackData, 5 * 60 * 1000);
+      return fallbackData;
+    }
+  },
+
+  generateMockJourneyData() {
+    return {
+      project: {
+        title: "Elyx Health Journey - Complete 8-Month Timeline",
+        description: "8-Month Health Transformation: From Onboarding to Optimization",
+        duration: "32 weeks",
+        member: "Rohan"
+      },
+      summary_stats: {
+        total_messages: 1247,
+        doctor_hours: 38.5,
+        coach_hours: 52.8,
+        average_adherence: "67%",
+        total_weight_loss: "-9.2kg",
+        final_hba1c: "5.1%",
+        weeks_tracked: 32,
+        workout_sessions: 156,
+        travel_trips: 12,
+        diagnostic_tests: 8,
+        plan_adjustments: 24,
+        final_bp: "118/75"
+      },
+      health_transformations: {
+        baseline: {
+          hba1c: "6.2%",
+          status: "Pre-diabetic",
+          rhr: "72 bpm",
+          hrv: "28ms",
+          sleep_efficiency: "68%",
+          medication: "Metformin 500mg daily"
+        },
+        final: {
+          hba1c: "5.1%",
+          status: "Optimal metabolic health",
+          rhr: "58 bpm",
+          hrv: "47ms",
+          sleep_efficiency: "83%",
+          bp: "118/75",
+          weight_change: "-9.2kg",
+          biological_age_change: "-3.4 years"
+        }
+      }
+    };
+  }
+};
+
+// Example usage:
+DataService.fetchJourneyData().then(d => console.log("Journey loaded:", d));
+
     insights: [
         {
             title: 'Glucose-Stress Pattern',
@@ -199,7 +190,7 @@ const MOCK_DATA = {
             category: 'Lifestyle'
         }
     ]
-};
+
 
 // ===== APPLICATION STATE MANAGEMENT =====
 class AppState {
