@@ -198,6 +198,7 @@
             border-bottom: 1px solid #eee;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             background: #f8f9fa;
             border-radius: 15px 15px 0 0;
         }
@@ -215,6 +216,27 @@
             0% { opacity: 1; }
             50% { opacity: 0.5; }
             100% { opacity: 1; }
+        }
+
+        .api-config {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-config select {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .api-key-input {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            width: 200px;
         }
 
         .chat-messages {
@@ -243,6 +265,12 @@
             border-left: 4px solid #4caf50;
             margin-left: auto;
             margin-right: 0;
+        }
+
+        .message.error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            margin-left: 0;
         }
 
         .chat-input {
@@ -423,6 +451,16 @@
             .logo-section h1 {
                 font-size: 2rem;
             }
+
+            .api-config {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .api-key-input {
+                width: 150px;
+            }
         }
     </style>
 </head>
@@ -545,8 +583,19 @@
 
             <div class="chat-interface">
                 <div class="chat-header">
-                    <div class="status-indicator"></div>
-                    <span>AI Health Assistant - Rohan's Journey Expert</span>
+                    <div style="display: flex; align-items: center;">
+                        <div class="status-indicator"></div>
+                        <span>AI Health Assistant - Enhanced</span>
+                    </div>
+                    <div class="api-config">
+                        <select id="aiProvider">
+                            <option value="fallback">Fallback AI (No API)</option>
+                            <option value="openai">OpenAI GPT</option>
+                            <option value="anthropic">Claude API</option>
+                            <option value="groq">Groq (Fast)</option>
+                        </select>
+                        <input type="password" id="apiKey" class="api-key-input" placeholder="API Key (optional)" style="display: none;">
+                    </div>
                 </div>
 
                 <div class="quick-actions">
@@ -558,25 +607,27 @@
 
                 <div class="chat-messages" id="chatMessages">
                     <div class="message ai">
-                        Hello! I'm your AI health assistant with complete knowledge of Rohan's 8-month transformation journey. I can help you understand:
+                        Hello! I'm your enhanced AI health assistant with complete knowledge of Rohan's 8-month transformation journey. I can now answer both predefined questions about the journey AND your own custom questions!
                         <br><br>
+                        <strong>Ask me anything about:</strong><br>
                         • Biomarker improvements and trends<br>
                         • Team member contributions and insights<br>
                         • Travel adaptations and protocols<br>
                         • Exercise and nutrition strategies<br>
                         • Sleep optimization techniques<br>
-                        • Critical moments and interventions<br>
+                        • Your own health questions<br>
+                        • General health and wellness topics<br>
                         <br>
-                        What would you like to explore about Rohan's health journey?
+                        <em>Note: For advanced AI responses, select an AI provider above and add your API key. Otherwise, I'll use my built-in knowledge.</em>
                     </div>
                 </div>
 
                 <div class="typing-indicator" id="typingIndicator">
-                    AI is analyzing Rohan's data...
+                    AI is analyzing your question...
                 </div>
 
                 <div class="chat-input">
-                    <input type="text" id="messageInput" placeholder="Ask about Rohan's health journey, biomarkers, team insights...">
+                    <input type="text" id="messageInput" placeholder="Ask about Rohan's journey, health topics, or your own questions...">
                     <button id="sendButton" onclick="sendMessage()">Send</button>
                 </div>
             </div>
@@ -638,708 +689,434 @@
     </section>
 
     <script>
-        // Rohan's Health Journey Knowledge Base
-        const journeyData = {
-            project: {
-                title: "Elyx Health Journey - Complete 8-Month Timeline",
-                description: "8-Month Health Transformation: From Onboarding to Optimization",
-                duration: "32 weeks",
-                member: "Rohan"
-            },
-            summary_stats: {
-                total_messages: 1247,
-                doctor_hours: 38.5,
-                coach_hours: 52.8,
-                average_adherence: "67%",
-                total_weight_loss: "-9.2kg",
-                final_hba1c: "5.1%",
-                weeks_tracked: 32,
-                workout_sessions: 156,
-                travel_trips: 12,
-                diagnostic_tests: 8,
-                plan_adjustments: 24,
-                final_bp: "118/75"
-            },
-            team_members: {
-                ruby_concierge: {
-                    name: "Ruby",
-                    role: "Concierge",
-                    color_code: "#9b59b6",
-                    responsibilities: ["Care coordination", "Travel planning", "Service management"]
-                },
-                dr_warren: {
-                    name: "Dr. Warren",
-                    role: "Primary Physician", 
-                    color_code: "#e74c3c",
-                    responsibilities: ["Medical oversight", "Lab interpretation", "Medication management"]
-                },
-                advik_scientist: {
-                    name: "Advik",
-                    role: "Performance Scientist",
-                    color_code: "#1abc9c", 
-                    responsibilities: ["Data analysis", "Wearable insights", "Performance optimization"]
-                },
-                carla_nutritionist: {
-                    name: "Carla",
-                    role: "Nutritionist",
-                    color_code: "#f39c12",
-                    responsibilities: ["Meal planning", "Nutrition coaching", "Dietary adjustments"]
-                },
-                rachel_pt: {
-                    name: "Rachel",
-                    role: "Personal Trainer",
-                    color_code: "#3498db",
-                    responsibilities: ["Workout design", "Form coaching", "Fitness progression"]
-                },
-                neel_rm: {
-                    name: "Neel", 
-                    role: "Relationship Manager",
-                    color_code: "#34495e",
-                    responsibilities: ["Overall journey management", "Final assessments"]
-                }
-            },
-            key_milestones: [
-                {
-                    week: 4,
-                    title: "Month 1 Complete",
-                    achievements: ["3 workouts completed", "70% nutrition adherence", "Vitamin D supplementation started"],
-                    next_goals: ["Sleep optimization", "Increase workout frequency"]
-                },
-                {
-                    week: 8,
-                    title: "Month 2 Assessment", 
-                    achievements: ["Weight loss: 3.2kg", "RHR: 72→62 bpm", "HRV: 28→38ms", "Sleep efficiency: +11%"],
-                    biomarkers: {"hba1c_trend": "improving", "glucose_control": "enhanced"}
-                },
-                {
-                    week: 12,
-                    title: "Quarterly Results",
-                    achievements: ["HbA1c: 6.1→5.8%", "Excellent lipid profile", "Perfect liver markers"],
-                    performance: {"vo2_max": "+12%", "body_battery": "91% average", "biological_age": "-2.3 years"}
-                },
-                {
-                    week: 24,
-                    title: "Mid-Journey Milestone",
-                    achievements: ["Weight loss: 7.2kg", "HbA1c: 5.4%", "BP well-controlled", "Diabetes reversal achieved"],
-                    status: "Exceeded optimistic projections"
-                },
-                {
-                    week: 32,
-                    title: "Journey Complete",
-                    final_results: {
-                        weight_loss: "9.2kg",
-                        hba1c: "5.1%",
-                        bp: "118/75", 
-                        biological_age_regression: "3.4 years",
-                        adherence: "67%"
-                    }
-                }
-            ],
-            advik_insights: {
-                role_description: "Performance Scientist specializing in wearable data analysis, circadian optimization, and biometric correlation",
-                key_contributions: [
-                    "Real-time wearable data analysis",
-                    "Stress-performance correlation insights",
-                    "Travel adaptation protocols", 
-                    "Sleep optimization strategies",
-                    "HRV and recovery monitoring",
-                    "Predictive health modeling"
-                ],
-                notable_analyses: [
-                    "Stress-glucose correlation coefficient of 0.73",
-                    "Exercise timing optimization for sleep quality",
-                    "Jet lag recovery protocols reducing adaptation time by 40%",
-                    "Biological age regression tracking",
-                    "Performance plateau identification and management"
-                ]
-            },
-            travel_adaptations: [
-                {
-                    destination: "Singapore",
-                    week: 6,
-                    time_difference: "+7 hours",
-                    protocols: ["Sleep shifting 30min for 3 days", "Light therapy", "In-flight movement every 90min"],
-                    outcome: "67% faster recovery than predicted"
-                },
-                {
-                    destination: "Dubai", 
-                    week: 10,
-                    challenges: ["Heat stress", "40°C temperatures", "Decreased performance"],
-                    adaptations: ["Extra hydration 500ml/day", "Exercise timing adjustment", "Electrolyte increase 150%"],
-                    outcome: "Maintained energy levels throughout trip"
-                },
-                {
-                    destination: "London",
-                    week: 16,
-                    protocols: ["Morning Thames walks", "Outdoor light exposure"],
-                    outcome: "Circadian realignment in 2.1 days (35% faster than baseline)"
-                },
-                {
-                    destination: "Tokyo",
-                    week: 20,
-                    time_difference: "+8.5 hours",
-                    innovation: ["Meal timing strategy", "Japanese diet integration"],
-                    outcome: ["Glucose variability improved 31%", "Stable performance metrics"]
-                }
-            ],
-            health_transformations: {
-                baseline: {
-                    hba1c: "6.2%",
-                    status: "Pre-diabetic",
-                    rhr: "72 bpm",
-                    hrv: "28ms",
-                    sleep_efficiency: "68%",
-                    medication: "Metformin 500mg daily"
-                },
-                final: {
-                    hba1c: "5.1%",
-                    status: "Optimal metabolic health",
-                    rhr: "58 bpm", 
-                    hrv: "47ms",
-                    sleep_efficiency: "83%",
-                    bp: "118/75",
-                    weight_change: "-9.2kg",
-                    biological_age_change: "-3.4 years"
-                }
-            }
-        };
-
-        // Conversation patterns and insights extracted from the journey
-        const conversationInsights = {
-            key_quotes: [
-                "Week 1 data shows improvement: Sleep efficiency up to 71% (+3%), RHR trending down to 69 bpm",
-                "Stress-glucose correlation coefficient of 0.73 - your emotional state significantly impacts metabolic function", 
-                "Month 2 performance analytics: RHR decreased to 62 bpm (-10 bpm, excellent), HRV increased to 38ms (+10ms, significant improvement)",
-                "Singapore travel analysis: Despite 13-hour flight, your sleep recovered 67% faster than predicted model",
-                "6-month longitudinal analysis: biological age regression of 3.1 years. You've achieved elite athlete-level recovery metrics"
-            ],
-            critical_moments: [
-                {
-                    week: 13,
-                    issue: "Overtraining detected",
-                    intervention: "Deload week prescribed",
-                    outcome: "Prevented overtraining syndrome"
-                },
-                {
-                    week: 28, 
-                    issue: "Conference stress spike - BP 155/92",
-                    intervention: "Immediate protocol adjustment",
-                    outcome: "Recovery in 3.2 days due to improved baseline fitness"
-                }
-            ],
-            success_factors: [
-                "Real-time data monitoring and adjustments",
-                "Personalized travel protocols",
-                "Stress management integration",
-                "Exercise timing optimization",
-                "Sleep architecture improvement",
-                "Comprehensive team approach"
-            ]
-        };
-
-        // AI Response Engine
-        class HealthJourneyAI {
+        // Enhanced AI System with API Integration
+        class EnhancedHealthAI {
             constructor() {
-                this.knowledge = journeyData;
-                this.insights = conversationInsights;
+                // Keep existing knowledge base for fallback
+                this.knowledgeBase = this.initializeKnowledgeBase();
+                this.setupAPIProviders();
             }
 
-            generateResponse(question) {
+            initializeKnowledgeBase() {
+                // Simplified version of your existing knowledge base
+                return {
+                    rohan_journey: {
+                        summary: "8-month health transformation with 9.2kg weight loss, HbA1c improved from 6.2% to 5.1%",
+                        team: ["Ruby (Concierge)", "Dr. Warren (Physician)", "Advik (Performance Scientist)", "Carla (Nutritionist)", "Rachel (Trainer)", "Neel (Relationship Manager)"],
+                        key_metrics: {
+                            weight_loss: "9.2kg",
+                            hba1c_change: "6.2% → 5.1%",
+                            sleep_improvement: "68% → 83% efficiency",
+                            heart_rate: "72 → 58 bpm",
+                            biological_age: "-3.4 years"
+                        },
+                        insights: [
+                            "Stress-glucose correlation of 0.73 discovered",
+                            "Travel protocols reduced jet lag recovery by 67%",
+                            "Exercise timing optimization improved sleep quality by 22%"
+                        ]
+                    }
+                };
+            }
+
+            setupAPIProviders() {
+                this.apiProviders = {
+                    openai: {
+                        url: 'https://api.openai.com/v1/chat/completions',
+                        headers: (apiKey) => ({
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json'
+                        }),
+                        payload: (message, context) => ({
+                            model: 'gpt-3.5-turbo',
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: `You are an expert health AI assistant with detailed knowledge about Rohan's 8-month health transformation journey. Here's the context: ${context}`
+                                },
+                                {
+                                    role: 'user',
+                                    content: message
+                                }
+                            ],
+                            max_tokens: 500,
+                            temperature: 0.7
+                        }),
+                        extractResponse: (data) => data.choices[0].message.content
+                    },
+                    anthropic: {
+                        url: 'https://api.anthropic.com/v1/messages',
+                        headers: (apiKey) => ({
+                            'x-api-key': apiKey,
+                            'Content-Type': 'application/json',
+                            'anthropic-version': '2023-06-01'
+                        }),
+                        payload: (message, context) => ({
+                            model: 'claude-3-haiku-20240307',
+                            max_tokens: 500,
+                            messages: [
+                                {
+                                    role: 'user',
+                                    content: `Context: You are an expert health AI assistant with detailed knowledge about Rohan's 8-month health transformation journey. ${context}\n\nQuestion: ${message}`
+                                }
+                            ]
+                        }),
+                        extractResponse: (data) => data.content[0].text
+                    },
+                    groq: {
+                        url: 'https://api.groq.com/openai/v1/chat/completions',
+                        headers: (apiKey) => ({
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json'
+                        }),
+                        payload: (message, context) => ({
+                            model: 'mixtral-8x7b-32768',
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: `You are an expert health AI assistant with detailed knowledge about Rohan's 8-month health transformation journey. Here's the context: ${context}`
+                                },
+                                {
+                                    role: 'user',
+                                    content: message
+                                }
+                            ],
+                            max_tokens: 500,
+                            temperature: 0.7
+                        }),
+                        extractResponse: (data) => data.choices[0].message.content
+                    }
+                };
+            }
+
+            async generateResponse(question) {
+                const provider = document.getElementById('aiProvider').value;
+                const apiKey = document.getElementById('apiKey').value;
+
+                if (provider === 'fallback' || !apiKey) {
+                    return this.generateFallbackResponse(question);
+                }
+
+                try {
+                    return await this.generateAPIResponse(question, provider, apiKey);
+                } catch (error) {
+                    console.error('API Error:', error);
+                    return `API Error: ${error.message}. Falling back to built-in knowledge.\n\n${this.generateFallbackResponse(question)}`;
+                }
+            }
+
+            async generateAPIResponse(question, provider, apiKey) {
+                const api = this.apiProviders[provider];
+                if (!api) {
+                    throw new Error('Invalid API provider');
+                }
+
+                const context = this.buildContext();
+                const payload = api.payload(question, context);
+
+                const response = await fetch(api.url, {
+                    method: 'POST',
+                    headers: api.headers(apiKey),
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API request failed (${response.status}): ${errorText}`);
+                }
+
+                const data = await response.json();
+                return api.extractResponse(data);
+            }
+
+            buildContext() {
+                const kb = this.knowledgeBase.rohan_journey;
+                return `
+                Rohan's Health Journey Summary:
+                - ${kb.summary}
+                - Care Team: ${kb.team.join(', ')}
+                - Key Metrics: Weight loss ${kb.key_metrics.weight_loss}, HbA1c ${kb.key_metrics.hba1c_change}, Sleep ${kb.key_metrics.sleep_improvement}, Heart Rate ${kb.key_metrics.heart_rate}, Biological Age ${kb.key_metrics.biological_age}
+                - Key Insights: ${kb.insights.join('; ')}
+                
+                Answer questions about this journey or provide general health advice.
+                `;
+            }
+
+            generateFallbackResponse(question) {
                 const lowerQ = question.toLowerCase();
                 
-                // HbA1c related questions
-                if (lowerQ.includes('hba1c') || lowerQ.includes('diabetes') || lowerQ.includes('blood sugar') || lowerQ.includes('glucose')) {
-                    return this.getHbA1cResponse();
+                // Check for journey-specific keywords
+                if (lowerQ.includes('rohan') || lowerQ.includes('journey') || lowerQ.includes('transformation')) {
+                    return this.getRohanSpecificResponse(lowerQ);
                 }
-                
-                // Advik/Performance Scientist questions
-                if (lowerQ.includes('advik') || lowerQ.includes('performance scientist') || lowerQ.includes('data analysis')) {
-                    return this.getAdvikResponse();
+
+                // General health topics
+                if (lowerQ.includes('weight loss') || lowerQ.includes('diet') || lowerQ.includes('nutrition')) {
+                    return this.getWeightLossAdvice();
                 }
-                
-                // Travel related questions
-                if (lowerQ.includes('travel') || lowerQ.includes('jet lag') || lowerQ.includes('singapore') || lowerQ.includes('dubai') || lowerQ.includes('tokyo') || lowerQ.includes('london')) {
-                    return this.getTravelResponse();
+
+                if (lowerQ.includes('sleep') || lowerQ.includes('insomnia')) {
+                    return this.getSleepAdvice();
                 }
-                
-                // Sleep related questions
-                if (lowerQ.includes('sleep') || lowerQ.includes('hrv') || lowerQ.includes('recovery')) {
-                    return this.getSleepResponse();
+
+                if (lowerQ.includes('exercise') || lowerQ.includes('workout') || lowerQ.includes('fitness')) {
+                    return this.getFitnessAdvice();
                 }
-                
-                // Weight loss and fitness questions
-                if (lowerQ.includes('weight') || lowerQ.includes('fitness') || lowerQ.includes('exercise') || lowerQ.includes('workout')) {
-                    return this.getWeightFitnessResponse();
+
+                if (lowerQ.includes('stress') || lowerQ.includes('anxiety')) {
+                    return this.getStressManagementAdvice();
                 }
-                
-                // Team member questions
-                if (lowerQ.includes('ruby') || lowerQ.includes('warren') || lowerQ.includes('carla') || lowerQ.includes('rachel') || lowerQ.includes('neel') || lowerQ.includes('team')) {
-                    return this.getTeamResponse();
+
+                if (lowerQ.includes('diabetes') || lowerQ.includes('blood sugar') || lowerQ.includes('glucose')) {
+                    return this.getDiabetesAdvice();
                 }
-                
-                // Milestone questions
-                if (lowerQ.includes('milestone') || lowerQ.includes('achievement') || lowerQ.includes('progress') || lowerQ.includes('results')) {
-                    return this.getMilestoneResponse();
-                }
-                
-                // Stress management questions
-                if (lowerQ.includes('stress') || lowerQ.includes('correlation') || lowerQ.includes('breathing')) {
-                    return this.getStressResponse();
-                }
-                
-                // Critical moments questions
-                if (lowerQ.includes('critical') || lowerQ.includes('emergency') || lowerQ.includes('problem') || lowerQ.includes('spike')) {
-                    return this.getCriticalMomentsResponse();
-                }
-                
-                // Statistics questions
-                if (lowerQ.includes('stats') || lowerQ.includes('numbers') || lowerQ.includes('data') || lowerQ.includes('metrics')) {
-                    return this.getStatsResponse();
-                }
-                
-                // General journey questions
-                if (lowerQ.includes('journey') || lowerQ.includes('transformation') || lowerQ.includes('overall') || lowerQ.includes('summary')) {
-                    return this.getJourneyOverviewResponse();
-                }
-                
+
                 // Default response for unmatched queries
-                return this.getDefaultResponse(question);
+                return this.getGeneralResponse(question);
             }
 
-            getHbA1cResponse() {
-                const baseline = this.knowledge.health_transformations.baseline.hba1c;
-                const final = this.knowledge.health_transformations.final.hba1c;
+            getRohanSpecificResponse(lowerQ) {
+                const kb = this.knowledgeBase.rohan_journey;
                 
-                return `Rohan achieved remarkable HbA1c improvement from ${baseline} (pre-diabetic) to ${final} (optimal) through a multi-faceted approach:
+                if (lowerQ.includes('hba1c') || lowerQ.includes('diabetes')) {
+                    return `Rohan achieved remarkable HbA1c improvement from ${kb.key_metrics.hba1c_change.split(' → ')[0]} (pre-diabetic) to ${kb.key_metrics.hba1c_change.split(' → ')[1]} (optimal) over 8 months through:
 
-**Key Strategies:**
-• **CGM-guided nutrition optimization** - Real-time glucose monitoring revealed that pastries spiked glucose to 140 mg/dl while eggs and avocado kept levels stable
-• **Stress management protocols** - Advik discovered a 0.73 correlation coefficient between stress and glucose spikes, leading to targeted breathing interventions
-• **Exercise timing optimization** - Post-workout HRV increased 18% within 2 hours, with sleep quality improving 22% on workout days
-• **Sleep architecture improvement** - Sleep efficiency increased from 68% to 83%, with deep sleep reaching 21% (optimal range)
+• **Continuous glucose monitoring** to understand food impacts
+• **Stress management protocols** (0.73 correlation between stress and glucose spikes)
+• **Exercise timing optimization** 
+• **Sleep quality improvement** (${kb.key_metrics.sleep_improvement})
+• **Team-based approach** with ${kb.team.length} specialists
 
-**Timeline:**
-• Month 2: HbA1c 6.1% (slight improvement)
-• Month 3: HbA1c 5.8% (quarterly milestone)
-• Month 6: HbA1c 5.4% (diabetes reversal achieved)
-• Month 8: HbA1c 5.1% (optimal metabolic health)
+This transformation shows that pre-diabetes can be reversed with the right approach and monitoring.`;
+                }
 
-The transformation exceeded even the most optimistic projections, with Advik's predictive model initially showing 73% probability of reaching target by month 4.`;
+                if (lowerQ.includes('weight') || lowerQ.includes('loss')) {
+                    return `Rohan achieved ${kb.key_metrics.weight_loss} weight loss through:
+
+• **Personalized nutrition coaching** with Carla (Nutritionist)
+• **Progressive exercise program** with Rachel (Personal Trainer) 
+• **Sleep optimization** improving recovery and metabolism
+• **Stress management** reducing cortisol-driven weight gain
+• **Travel-friendly protocols** maintaining consistency across 12 trips
+
+The key was sustainable habits rather than crash dieting, supported by real-time biometric monitoring.`;
+                }
+
+                return `Rohan's 8-month transformation achieved: ${kb.summary}
+
+**Key Team Members:** ${kb.team.join(', ')}
+
+**Major Improvements:**
+• Weight: ${kb.key_metrics.weight_loss}
+• HbA1c: ${kb.key_metrics.hba1c_change}
+• Sleep: ${kb.key_metrics.sleep_improvement}
+• Heart Rate: ${kb.key_metrics.heart_rate}
+• Biological Age: ${kb.key_metrics.biological_age}
+
+**Key Insights:** ${kb.insights.join(', ')}`;
             }
 
-            getAdvikResponse() {
-                return `**Advik - Performance Scientist** was absolutely crucial to Rohan's transformation success:
+            getWeightLossAdvice() {
+                return `**Effective Weight Loss Strategies:**
 
-**Role & Expertise:**
-• Specialized in wearable data analysis, circadian optimization, and biometric correlation
-• Provided real-time performance insights and predictive health modeling
+**Nutrition:**
+• Focus on whole foods - lean proteins, vegetables, complex carbs
+• Practice portion control using the "plate method" (1/2 vegetables, 1/4 protein, 1/4 complex carbs)
+• Stay hydrated (aim for 8-10 glasses of water daily)
+• Limit processed foods and added sugars
 
-**Key Contributions:**
-• **Stress-Glucose Discovery**: Identified 0.73 correlation between stress and glucose spikes, enabling targeted interventions during high-pressure work periods
-• **Sleep Optimization**: Analyzed that late dinners (after 8 PM) correlated with 23% longer sleep onset, leading to 3-hour food cutoff protocol
-• **Travel Protocols**: Developed jet lag recovery strategies that reduced adaptation time by 40%
-• **Exercise Timing**: Discovered optimal workout window (4-6 PM) improved sleep scores by 12%
-• **Recovery Monitoring**: Tracked HRV improvements from 28ms to 47ms over 8 months
+**Exercise:**
+• Combine cardio (150 min/week moderate intensity) with strength training (2-3x/week)
+• Start with 20-30 minute sessions if you're a beginner
+• Find activities you enjoy for long-term sustainability
 
-**Notable Analyses:**
-• Predicted recovery patterns with 94% accuracy within 24 hours post-workout
-• Detected overtraining in Week 13, preventing performance plateau
-• Biological age regression tracking showed 3.4 years younger by journey end
-• Heat stress protocols for Dubai maintained energy levels in 40°C temperatures
+**Lifestyle:**
+• Get 7-9 hours of quality sleep (poor sleep disrupts hunger hormones)
+• Manage stress through meditation, yoga, or other relaxation techniques
+• Track progress with measurements, not just weight
 
-Advik's data-driven approach transformed raw wearable data into actionable insights that directly contributed to Rohan's exceptional results.`;
+**Sustainable Approach:**
+Aim for 1-2 pounds per week weight loss. Rapid weight loss is often unsustainable and can lead to muscle loss.
+
+*Note: Consult with healthcare providers before starting any weight loss program.*`;
             }
 
-            getTravelResponse() {
-                const travels = this.knowledge.travel_adaptations;
-                
-                return `Rohan traveled to **${travels.length} destinations** during his 8-month journey, with Advik developing personalized protocols for each:
+            getSleepAdvice() {
+                return `**Sleep Optimization Strategies:**
 
-**Singapore (Week 6):**
-• Challenge: +7 hour time difference, 13-hour flight
-• Protocol: Sleep shifting 30min for 3 days pre-departure, light therapy, in-flight movement every 90min  
-• Result: Sleep recovered 67% faster than predicted model
+**Sleep Hygiene:**
+• Maintain consistent sleep/wake times (even on weekends)
+• Create a cool, dark, quiet sleep environment (65-68°F ideal)
+• Avoid screens 1-2 hours before bedtime (blue light disrupts melatonin)
+• Use blackout curtains or eye masks
 
-**Dubai (Week 10):**
-• Challenge: 40°C heat stress, decreased performance
-• Adaptation: Extra 500ml hydration daily, exercise timing adjustment, 150% electrolyte increase
-• Result: Maintained energy levels throughout trip
+**Pre-Sleep Routine:**
+• Develop a relaxing bedtime ritual (reading, gentle stretching, meditation)
+• Avoid caffeine after 2 PM and alcohol close to bedtime
+• Stop eating 2-3 hours before sleep
+• Try a warm bath or shower before bed
 
-**London (Week 16):**
-• Protocol: Morning Thames walks, outdoor light exposure  
-• Result: Circadian realignment in 2.1 days (35% faster than baseline)
+**Daytime Habits:**
+• Get natural light exposure in the morning (helps regulate circadian rhythm)
+• Exercise regularly, but not within 3 hours of bedtime
+• Limit daytime naps to 20-30 minutes before 3 PM
 
-**Tokyo (Week 20):**
-• Innovation: Meal timing strategy, Japanese diet integration
-• Result: Glucose variability improved 31%, stable performance metrics
+**When to Seek Help:**
+If you consistently have trouble falling asleep, staying asleep, or feel unrested despite adequate sleep time, consult a healthcare provider about possible sleep disorders.
 
-**Key Success Factors:**
-• Pre-travel circadian adjustment protocols
-• Destination-specific adaptation strategies  
-• Real-time monitoring and adjustments
-• Integration of local environment (outdoor walks, diet)
-
-These travel adaptations became a model for how high-performing executives can maintain health optimization while traveling globally.`;
+*Quality sleep is essential for physical health, mental wellbeing, and cognitive function.*`;
             }
 
-            getSleepResponse() {
-                const baseline = this.knowledge.health_transformations.baseline;
-                const final = this.knowledge.health_transformations.final;
-                
-                return `Rohan's sleep transformation was one of the most dramatic improvements in his journey:
+            getFitnessAdvice() {
+                return `**Comprehensive Fitness Guide:**
 
-**Baseline Issues:**
-• Sleep efficiency: ${baseline.sleep_efficiency} (concerning)
-• Average duration: 5.5-6 hours with frequent wake-ups
-• Deep sleep: Only 14% of total sleep time
-• HRV: ${baseline.hrv} (low for age group)
+**Getting Started:**
+• Begin with 150 minutes of moderate-intensity aerobic activity per week
+• Add 2-3 strength training sessions targeting all major muscle groups
+• Start slowly and progressively increase intensity and duration
 
-**Final Results:**
-• Sleep efficiency: ${final.sleep_efficiency} (+15% improvement)
-• Deep sleep: 21% (optimal range achieved)  
-• HRV: ${final.hrv} (+19ms significant improvement)
-• Sleep score: Consistently 85+ in final months
+**Cardio Options:**
+• Walking, swimming, cycling, dancing, hiking
+• High-intensity interval training (HIIT) for time-efficient workouts
+• Choose activities you enjoy for better adherence
 
-**Key Interventions:**
-• **Timing**: Consistent 10:30 PM bedtime (+/- 15 min)
-• **Environment**: Room temperature maintained at 18-19°C
-• **Light Management**: Blue light elimination 2 hours pre-sleep
-• **Nutrition**: 3-hour food cutoff before bed (late dinners correlated with 23% longer sleep onset)
-• **Exercise**: Workout timing optimization - exercise 4-6 PM improved sleep scores by 12%
-• **Supplementation**: Magnesium timing optimization
+**Strength Training:**
+• Focus on compound movements (squats, deadlifts, push-ups, pull-ups)
+• Use bodyweight, free weights, or machines based on your preference
+• Allow 48-72 hours recovery between training same muscle groups
 
-**Advik's Analysis:**
-"Sleep architecture now shows 21% deep sleep - optimal range achieved. Your sleep regularity score is 89%, and biological clock is perfectly synchronized."
+**Recovery & Flexibility:**
+• Include rest days in your routine
+• Incorporate stretching, yoga, or foam rolling
+• Listen to your body and adjust intensity as needed
 
-The sleep improvements directly correlated with better glucose control, stress management, and overall energy levels.`;
+**Nutrition Support:**
+• Eat protein within 2 hours post-workout for muscle recovery
+• Stay hydrated before, during, and after exercise
+• Fuel properly for your activity level
+
+**Progression Tips:**
+Track your workouts, gradually increase weights/reps, and celebrate small victories!
+
+*Always consult healthcare providers before starting new exercise programs, especially if you have health conditions.*`;
             }
 
-            getWeightFitnessResponse() {
-                return `Rohan achieved impressive fitness transformation over 8 months:
+            getStressManagementAdvice() {
+                return `**Stress Management Strategies:**
 
-**Weight Loss Journey:**
-• **Total Loss**: 9.2kg (mostly visceral fat)
-• **Timeline**: Month 2: -3.2kg, Month 6: -7.2kg, Final: -9.2kg
-• **Composition**: Focus on visceral fat reduction while maintaining muscle mass
+**Immediate Relief Techniques:**
+• **Deep breathing**: 4-7-8 technique (inhale 4, hold 7, exhale 8)
+• **Progressive muscle relaxation**: Tense and release muscle groups
+• **Mindfulness**: Focus on present moment without judgment
+• **Quick walk**: Even 5-10 minutes can reduce stress hormones
 
-**Fitness Achievements:**
-• **Workout Sessions**: 156 sessions completed over 32 weeks
-• **VO2 Max**: Estimated +18% improvement  
-• **Resting Heart Rate**: 72 → 58 bpm (-14 bpm, elite athlete level)
-• **Recovery**: 94% recovery rate within 24 hours post-workout
-• **Body Battery**: 91% average (excellent)
+**Daily Practices:**
+• **Meditation**: Start with 5-10 minutes daily
+• **Regular exercise**: Powerful stress reducer and mood booster
+• **Adequate sleep**: 7-9 hours to support stress resilience
+• **Healthy nutrition**: Limit caffeine, alcohol, and processed foods
 
-**Exercise Evolution:**
-• **Week 1-4**: Hotel room routines, 20-min sessions
-• **Month 2**: Added cardio, gym sessions
-• **Month 3-4**: Increased intensity and volume
-• **Month 5-8**: Periodization to prevent plateaus
+**Long-term Strategies:**
+• **Time management**: Prioritize tasks, delegate when possible
+• **Social support**: Connect with friends, family, or support groups
+• **Hobbies**: Engage in activities you enjoy
+• **Professional help**: Consider counseling or therapy if stress is overwhelming
 
-**Rachel's Coaching Approach:**
-• Progressive overload with form focus
-• Travel-friendly workout designs
-• Recovery monitoring through wearable data
-• Deload weeks when overtraining detected
+**Physical Impact Awareness:**
+Chronic stress can affect sleep, digestion, immune function, and cardiovascular health. Managing stress isn't just about feeling better mentally—it's crucial for physical health too.
 
-**Key Success Factor**: Real-time monitoring prevented overtraining (detected in Week 13) and optimized exercise timing for sleep quality (post-workout HRV increased 18% within 2 hours).
+**Work-Life Balance:**
+Set boundaries, take regular breaks, and remember that rest is productive too.
 
-The combination of consistent training, data-driven adjustments, and professional coaching created sustainable fitness habits that supported overall health transformation.`;
+*If stress significantly impacts your daily life, don't hesitate to seek professional support.*`;
             }
 
-            getTeamResponse() {
-                const team = this.knowledge.team_members;
-                
-                return `Rohan's transformation was achieved through a **6-member expert care team** working in perfect coordination:
+            getDiabetesAdvice() {
+                return `**Diabetes Management & Prevention:**
 
-**Ruby (Concierge)** - The Orchestrator
-• Coordinated all care team interactions
-• Managed travel logistics and health packs
-• Scheduled appointments and assessments
-• Provided seamless service management
+**Key Lifestyle Factors:**
+• **Blood sugar monitoring**: Regular testing helps understand food/activity impacts
+• **Nutrition**: Focus on low glycemic index foods, fiber-rich options
+• **Exercise**: Both cardio and strength training improve insulin sensitivity
+• **Weight management**: Even 5-10% weight loss can significantly improve glucose control
 
-**Dr. Warren (Primary Physician)** - Medical Leadership  
-• ${this.knowledge.summary_stats.doctor_hours} hours of medical oversight
-• Lab interpretation and medication management
-• Quarterly health assessments
-• Emergency intervention protocols
+**Nutritional Strategies:**
+• **Plate method**: Fill 1/2 plate with non-starchy vegetables
+• **Carb awareness**: Choose complex carbs over simple sugars
+• **Consistent meal timing**: Helps stabilize blood sugar levels
+• **Portion control**: Use measuring tools initially to learn proper portions
 
-**Advik (Performance Scientist)** - Data Intelligence
-• Real-time wearable data analysis
-• Predictive health modeling
-• Travel optimization protocols
-• Performance correlation insights
+**Exercise Benefits:**
+• **Immediate**: Exercise can lower blood sugar for up to 24 hours
+• **Long-term**: Improves insulin sensitivity and glucose control
+• **Types**: Mix aerobic exercise with resistance training
+• **Safety**: Monitor blood sugar before/after exercise
 
-**Carla (Nutritionist)** - Metabolic Optimization
-• Travel-friendly meal planning
-• CGM-guided nutrition adjustments
-• Client dinner strategies
-• Macro optimization for goals
+**Monitoring & Medical Care:**
+• **HbA1c testing**: Every 3-6 months to track long-term control
+• **Regular check-ups**: Eye exams, foot care, kidney function tests
+• **Medication adherence**: Take as prescribed, discuss side effects with doctor
 
-**Rachel (Personal Trainer)** - Physical Transformation
-• ${this.knowledge.summary_stats.coach_hours} hours of coaching
-• Progressive workout design
-• Form coaching and injury prevention
-• Travel workout adaptations
+**Rohan's Success Example:**
+Rohan reversed pre-diabetes (HbA1c 6.2% → 5.1%) through comprehensive lifestyle changes, continuous monitoring, and expert team support.
 
-**Neel (Relationship Manager)** - Journey Oversight
-• Overall journey coordination
-• Final assessments and planning
-• Member satisfaction and outcomes
-
-**Team Collaboration Highlights:**
-• **1,247 total interactions** across the team
-• Real-time data sharing between specialists
-• Coordinated interventions during critical moments
-• Seamless travel support and adaptations
-
-This integrated approach ensured no aspect of health was overlooked, creating synergistic effects that exceeded individual specialist contributions.`;
+*Always work with healthcare providers for personalized diabetes management plans.*`;
             }
 
-            getMilestoneResponse() {
-                const milestones = this.knowledge.key_milestones;
-                
-                return `Rohan achieved **5 major milestones** throughout his transformation journey:
+            getGeneralResponse(question) {
+                return `I'd be happy to help with your question: "${question}"
 
-**Month 1 Complete (Week 4):**
-• 3 workouts completed, 70% nutrition adherence
-• Vitamin D supplementation started
-• Foundation habits established
+**I can provide information about:**
 
-**Month 2 Assessment (Week 8):**  
-• Weight loss: 3.2kg (mostly visceral fat)
-• RHR: 72→62 bpm (-10 bpm improvement)
-• HRV: 28→38ms (+10ms significant gain)
-• Sleep efficiency: +11% improvement
+**Rohan's Health Journey:**
+• 8-month transformation details
+• Team member contributions  
+• Specific health improvements
+• Travel adaptations and protocols
 
-**Quarterly Results (Week 12):**
-• **HbA1c: 6.1→5.8%** (major metabolic improvement)
-• Excellent lipid profile, perfect liver markers
-• VO2 max: +12% estimated improvement  
-• Biological age: -2.3 years regression
+**General Health Topics:**
+• Weight loss and nutrition strategies
+• Exercise and fitness planning
+• Sleep optimization techniques
+• Stress management approaches
+• Diabetes prevention/management
+• Cardiovascular health
+• Healthy aging strategies
 
-**Mid-Journey Milestone (Week 24):**
-• **Weight loss: 7.2kg total**
-• **HbA1c: 5.4%** (diabetes reversal achieved)
-• BP well-controlled on medication
-• **Status**: Exceeded optimistic projections
+**How to get better answers:**
+• Be more specific about what aspect interests you
+• Ask about particular health goals you have
+• Mention any relevant health conditions or concerns
 
-**Journey Complete (Week 32):**
-• **Final weight loss: 9.2kg**
-• **HbA1c: 5.1%** (optimal metabolic health)
-• **BP: 118/75** (optimal range)
-• **Biological age regression: 3.4 years**
-• **Average adherence: 67%** (excellent for lifestyle)
+**For AI-powered responses:**
+Select an AI provider above and enter your API key for more detailed, personalized responses to any health question.
 
-**Key Success Metrics:**
-• All biomarkers in top 10% percentile for age group
-• Elite athlete-level recovery metrics achieved
-• Sustainable health infrastructure built
-• Comprehensive transformation completed
+**Example questions you could ask:**
+• "What are the best exercises for someone just starting out?"
+• "How can I improve my sleep quality?"
+• "What should I know about managing stress at work?"
+• "Tell me more about Rohan's travel adaptation strategies"
 
-Each milestone built upon the previous, creating momentum that sustained the entire 8-month transformation.`;
-            }
-
-            getStressResponse() {
-                return `Stress management became a **critical breakthrough** in Rohan's journey:
-
-**The Discovery:**
-• Advik identified a **0.73 correlation coefficient** between stress levels and glucose spikes
-• Emotional state significantly impacted metabolic function
-• Work pressure literally showed up in real-time glucose data
-
-**Key Stress Events:**
-• **Week 3**: Stress score 89/100 during major client presentation
-• **Week 28**: Conference stress caused BP spike to 155/92
-• **Chronic stress**: HRV averaging 28ms initially (low for age)
-
-**Intervention Protocols:**
-• **5-minute breathing protocol** during high-stress periods
-• **Optimal timing**: 10 AM, 2 PM, and 6 PM based on HRV patterns
-• **Expected outcome**: 15-20% reduction in stress-induced glucose spikes
-
-**Results:**
-• HRV improved from 28ms to 47ms (+19ms)
-• Stress scores decreased from 65/100 average to managed levels
-• **Chronic stress load decreased 34%** over journey
-• Autonomic nervous system balance achieved
-
-**Real-World Application:**
-• Conference food + zero gym access = perfect storm
-• **Recovery time**: 3.2 days vs 7-10 days for average individual
-• Baseline fitness created remarkable resilience
-
-**Advik's Analysis:**
-"Your improved fitness created protective effect against stress. Recovery patterns show 40% faster return to baseline compared to general population."
-
-This stress-health connection became a model for how high-performers can manage work pressure while optimizing metabolic health.`;
-            }
-
-            getCriticalMomentsResponse() {
-                const critical = this.insights.critical_moments;
-                
-                return `Rohan faced **2 critical moments** that tested the system's responsiveness:
-
-**WEEK 13 - OVERTRAINING CRISIS:**
-• **Detection**: Advik's analysis showed training load exceeded functional threshold by 23%
-• **Symptoms**: HRV decreased 15%, sleep latency increased 8 minutes, legs heavy, motivation low
-• **Intervention**: Immediate deload week - 40-50% intensity, focus on mobility, yoga, swimming
-• **Outcome**: Prevented overtraining syndrome, returned stronger
-• **Key Insight**: Real-time monitoring prevented weeks of setback
-
-**WEEK 28 - HOUSTON CONFERENCE CRISIS:**
-• **Situation**: "Houston, we have a problem" - 4 days conference food, zero gym, BP spiked to 155/92
-• **Emergency Response**: 
-  - Dr. Warren: Double meditation, increase BP meds to 7.5mg
-  - Advik: Emergency data analysis showed stress score 94/100, sleep efficiency 61%
-• **Recovery**: 3.2 days to full recovery vs predicted 7-10 days
-• **Key Finding**: Baseline fitness created remarkable resilience
-
-**System Responses:**
-• **Immediate coordination** between team members
-• **Data-driven interventions** rather than panic
-• **Predictive analytics** for recovery timelines  
-• **Real-time adjustments** to protocols
-
-**Lessons Learned:**
-• High baseline fitness = faster crisis recovery
-• Continuous monitoring enables early intervention
-• Team coordination critical during emergencies
-• Temporary setbacks don't derail long-term progress
-
-These moments proved the system's robustness and Rohan's transformation durability under real-world stress.`;
-            }
-
-            getStatsResponse() {
-                const stats = this.knowledge.summary_stats;
-                
-                return `Here are Rohan's complete **8-month transformation statistics**:
-
-**Journey Overview:**
-• **Duration**: ${stats.weeks_tracked} weeks (8 months)
-• **Total Messages**: ${stats.total_messages} team interactions
-• **Average Adherence**: ${stats.average_adherence} (excellent for lifestyle)
-
-**Care Team Investment:**
-• **Doctor Hours**: ${stats.doctor_hours} (Dr. Warren)
-• **Coach Hours**: ${stats.coach_hours} (Rachel + team)
-• **Total Care Hours**: 91.3 hours of expert attention
-
-**Health Transformations:**
-• **Weight Loss**: ${stats.total_weight_loss} (mostly visceral fat)
-• **HbA1c**: 6.2% → ${stats.final_hba1c} (pre-diabetic to optimal)
-• **Blood Pressure**: 72 bpm → ${stats.final_bp} (optimal range)
-• **Biological Age**: -3.4 years regression
-
-**Activity & Engagement:**
-• **Workout Sessions**: ${stats.workout_sessions} completed
-• **Travel Trips**: ${stats.travel_trips} with optimized protocols
-• **Diagnostic Tests**: ${stats.diagnostic_tests} comprehensive assessments
-• **Plan Adjustments**: ${stats.plan_adjustments} real-time optimizations
-
-**Performance Metrics:**
-• **Resting Heart Rate**: 72 → 58 bpm (-19%)
-• **HRV**: 28 → 47ms (+68% improvement)  
-• **Sleep Efficiency**: 68% → 83% (+15%)
-• **VO2 Max**: +18% estimated improvement
-• **Body Battery**: 91% average (elite level)
-
-**Success Factors:**
-• Real-time data monitoring and adjustments
-• Comprehensive team approach
-• Travel-optimized protocols
-• Stress-health correlation insights
-• Sustainable habit formation
-
-These numbers represent one of the most comprehensive health transformations documented in the Elyx system.`;
-            }
-
-            getJourneyOverviewResponse() {
-                return `**Rohan's 8-Month Health Transformation** is a masterclass in systematic health optimization:
-
-**The Challenge:**
-• Pre-diabetic executive (HbA1c 6.2%) with chronic stress
-• Poor sleep (5.5-6 hours, frequent wake-ups)  
-• Irregular eating due to travel and client dinners
-• Family history of diabetes and hypertension
-
-**The System:**
-• **6-person expert team** providing 91.3 hours of care
-• **Real-time data monitoring** through wearables and CGM
-• **1,247 team interactions** with personalized adjustments
-• **Travel-optimized protocols** for 12 trips
-
-**The Transformation:**
-• **Metabolic**: HbA1c 6.2% → 5.1% (diabetes reversal)
-• **Physical**: 9.2kg weight loss, elite fitness metrics
-• **Sleep**: 68% → 83% efficiency, optimal architecture
-• **Biological Age**: 3.4 years younger
-
-**Key Breakthrough Moments:**
-• **Week 7**: Stress-glucose correlation discovery (0.73 coefficient)
-• **Week 12**: Quarterly results exceeded projections  
-• **Week 24**: Diabetes reversal achieved
-• **Week 28**: Crisis recovery demonstrated resilience
-
-**Innovation Highlights:**
-• **Advik's AI-driven insights** transformed raw data into actionable protocols
-• **Travel adaptation strategies** maintained progress across time zones
-• **Stress management integration** addressed root causes
-• **Predictive modeling** enabled proactive interventions
-
-**Final Status:**
-• All biomarkers in top 10% percentile for age group
-• Sustainable health infrastructure established
-• Model for executive health optimization
-• 67% adherence proving real-world applicability
-
-**The Bigger Picture:**
-This journey proved that comprehensive, data-driven, team-based healthcare can reverse metabolic dysfunction and optimize performance even for high-stress executives with demanding travel schedules.
-
-It's not just about the numbers—it's about creating a sustainable system for lifelong health optimization.`;
-            }
-
-            getDefaultResponse(question) {
-                return `I understand you're asking about "${question}". I have comprehensive knowledge about Rohan's 8-month health transformation journey.
-
-I can help you explore:
-
-**Health Metrics & Biomarkers:**
-• HbA1c improvement (6.2% → 5.1%)
-• Weight loss journey (-9.2kg)  
-• Sleep optimization (68% → 83% efficiency)
-• Heart rate variability improvements
-
-**Team & Process:**
-• 6-person expert care team roles
-• 1,247 team interactions and insights
-• Real-time data analysis and adjustments
-• Travel adaptation protocols
-
-**Key Discoveries:**
-• Stress-glucose correlation insights
-• Exercise timing optimization
-• Sleep architecture improvements
-• Predictive health modeling
-
-**Critical Moments:**
-• Overtraining prevention (Week 13)
-• Emergency interventions (Week 28)
-• Travel adaptations across 12 trips
-• Milestone achievements
-
-Could you ask me something more specific about any of these areas? For example:
-- "How did stress affect Rohan's glucose levels?"
-- "What role did each team member play?"
-- "Tell me about the travel adaptations"
-- "What were the key milestones?"`;
+What specific aspect of health would you like to explore?`;
             }
         }
 
-        // Initialize the AI system
-        const healthAI = new HealthJourneyAI();
+        // Initialize the enhanced AI system
+        const enhancedHealthAI = new EnhancedHealthAI();
+
+        // UI Event Handlers
+        document.getElementById('aiProvider').addEventListener('change', function() {
+            const apiKeyInput = document.getElementById('apiKey');
+            if (this.value === 'fallback') {
+                apiKeyInput.style.display = 'none';
+            } else {
+                apiKeyInput.style.display = 'inline-block';
+                apiKeyInput.placeholder = `${this.value.toUpperCase()} API Key`;
+            }
+        });
 
         // Chat functionality
-        function sendMessage() {
+        async function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             
@@ -1358,9 +1135,8 @@ Could you ask me something more specific about any of these areas? For example:
             const typingIndicator = document.getElementById('typingIndicator');
             typingIndicator.classList.add('show');
             
-            // Simulate AI processing time
-            setTimeout(() => {
-                const response = healthAI.generateResponse(message);
+            try {
+                const response = await enhancedHealthAI.generateResponse(message);
                 
                 // Hide typing indicator
                 typingIndicator.classList.remove('show');
@@ -1368,10 +1144,17 @@ Could you ask me something more specific about any of these areas? For example:
                 // Add AI response
                 addMessage(response, 'ai');
                 
-                // Re-enable button
-                sendButton.disabled = false;
-                sendButton.textContent = 'Send';
-            }, 1500 + Math.random() * 1000); // Random delay for realism
+            } catch (error) {
+                // Hide typing indicator
+                typingIndicator.classList.remove('show');
+                
+                // Add error message
+                addMessage(`Sorry, I encountered an error: ${error.message}. Please try again.`, 'error');
+            }
+            
+            // Re-enable button
+            sendButton.disabled = false;
+            sendButton.textContent = 'Send';
         }
 
         function addMessage(text, sender) {
@@ -1404,7 +1187,9 @@ Could you ask me something more specific about any of these areas? For example:
                 sendMessage();
             }
         });
+
+        // Initialize API key input state
+        document.getElementById('aiProvider').dispatchEvent(new Event('change'));
     </script>
 </body>
 </html>
-                
