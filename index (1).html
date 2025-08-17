@@ -9,6 +9,249 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.0.1"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+
+        .container-fluid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        header h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 3.5rem;
+        }
+
+        header h2 {
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        header .lead {
+            color: #718096;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Card Enhancements */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+        }
+
+        .card-header h3 {
+            color: #2d3748;
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Sleep Analysis Button Enhancement */
+        .sleep-analysis-card {
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sleep-analysis-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .btn-sleep-analysis {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-sleep-analysis:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #7c8cff 0%, #8a63d2 100%);
+        }
+
+        /* Form Controls */
+        .form-select {
+            border-radius: 10px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            background: white;
+        }
+
+        /* Canvas Container */
+        canvas {
+            border-radius: 8px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .card-header,
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .btn-sleep-analysis {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-gradient);
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0.7;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Additional Micro-animations */
+        .card-header h3 {
+            transition: color 0.3s ease;
+        }
+
+        .card:hover .card-header h3 {
+            color: #667eea;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -28,10 +271,10 @@
         <div class="row">
             <!-- Left Column -->
              <!-- Sleep Analysis Button -->
-<section class="card mb-4">
+<section class="card mb-4 sleep-analysis-card">
     <div class="card-body text-center">
-        <a href="sleep_efficiency_graph.html" target="_blank" class="btn btn-primary btn-lg">
-            Rohan's Complete Sleep Analysis
+        <a href="sleep_efficiency_graph.html" target="_blank" class="btn btn-sleep-analysis btn-lg">
+            🌙 Rohan's Complete Sleep Analysis
         </a>
     </div>
 </section>
@@ -39,7 +282,7 @@
                 <!-- Biomarker Timeline -->
                 <section id="biomarker-timeline" class="card mb-4">
                     <div class="card-header">
-                        <h3>Biomarker Progress Timeline</h3>
+                        <h3>📊 Biomarker Progress Timeline</h3>
                     </div>
                     <div class="card-body">
                         <canvas id="timelineChart" height="300"></canvas>
@@ -49,7 +292,7 @@
                 <!-- Conversations -->
                 <section id="conversations" class="card mb-4">
                     <div class="card-header">
-                        <h3>Weekly Conversations</h3>
+                        <h3>💬 Weekly Conversations</h3>
                         <select id="week-selector" class="form-select"></select>
                     </div>
                     <div class="card-body" id="conversation-container">
@@ -63,7 +306,7 @@
                 <!-- Team Members -->
                 <section id="team-members" class="card mb-4">
                     <div class="card-header">
-                        <h3>Care Team</h3>
+                        <h3>👥 Care Team</h3>
                     </div>
                     <div class="card-body" id="team-container">
                         <!-- Will be populated by JavaScript -->
@@ -73,7 +316,7 @@
                 <!-- Milestones -->
                 <section id="milestones" class="card mb-4">
                     <div class="card-header">
-                        <h3>Key Milestones</h3>
+                        <h3>🎯 Key Milestones</h3>
                     </div>
                     <div class="card-body" id="milestones-container">
                         <!-- Will be populated by JavaScript -->
@@ -85,7 +328,7 @@
         <!-- Health Transformation -->
         <section id="transformation" class="card mb-4">
             <div class="card-header">
-                <h3>Health Transformation</h3>
+                <h3>🌟 Health Transformation</h3>
             </div>
             <div class="card-body">
                 <div class="row" id="transformation-container">
