@@ -123,3 +123,9 @@ efficiency charts.
 Developed as part of **Elyx Health Journey Visualization Project** for **Elyx Hackathon 2025**.\
 Inspired by real-world **digital health coaching** platforms and
 AI-driven personal health tracking.
+
+------------------------------------------------------------------------
+
+## 👩‍🎓Authors
+   Aayushi Sinha - IIT Roorkee 
+   Aakriti - IIT Roorkee
