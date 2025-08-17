@@ -19,10 +19,10 @@ efficiency charts.
 
 ## 📂 Project Structure
 
-    ├── index.html                # Main dashboard UI
-    ├── button2.html              # Alternative dashboard view with stats & insights
+    ├── button2.html                # Main dashboard UI
+    ├── index (1).html              # Alternative dashboard view with stats & insights
     ├── elyx_aichatbot.html       # Interactive AI Chatbot (Path B)
-    ├── elyx_journey_with_advik.html # Timeline journey with milestones, stats & chat replay
+    ├── elyx_journey_with_advik (1).html # Timeline journey with milestones, stats & chat replay
     ├── elyx_journey_json.json    # Core JSON dataset (journey data, team, stats, conversations)
     ├── sleep_efficiency_graph.html # Sleep efficiency progress visualization
     ├── script.js                 # Core logic: charts, stats population, dark mode, journey features
