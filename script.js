@@ -107,15 +107,29 @@ function populateSummaryStats() {
 }
 
 function createTimelineChart() {
+    
     const ctx = document.getElementById('timelineChart').getContext('2d');
     
-    // Prepare data for chart
-    const milestones = journeyData.key_milestones;
-    const weeks = milestones.map(m => `Week ${m.week}`);
-    const hba1cValues = milestones.map(m => m.final_results ? parseFloat(m.final_results.hba1c) : null);
-    const weightValues = milestones.map(m => m.final_results ? parseFloat(m.final_results.weight_loss.replace('kg', '')) : null);
+    // Enhanced data based on Rohan's 8-month journey from conversations
+    const weeks = ['Week 1', 'Week 4', 'Week 8', 'Week 12', 'Week 16', 'Week 20', 'Week 24', 'Week 28', 'Week 32'];
     
-    new Chart(ctx, {
+    // HbA1c progression from conversations (% values)
+    const hba1cValues = [6.2, 6.1, 5.8, 5.8, 5.6, 5.4, 5.4, 5.2, 5.1];
+    
+    // Weight loss progression (cumulative kg lost)
+    const weightLossValues = [0, -1.2, -3.2, -4.8, -5.9, -7.0, -7.2, -8.1, -9.2];
+    
+    // Create gradient for HbA1c line
+    const hba1cGradient = ctx.createLinearGradient(0, 0, 0, 400);
+    hba1cGradient.addColorStop(0, 'rgba(231, 76, 60, 0.8)');
+    hba1cGradient.addColorStop(1, 'rgba(231, 76, 60, 0.2)');
+    
+    // Create gradient for weight line
+    const weightGradient = ctx.createLinearGradient(0, 0, 0, 400);
+    weightGradient.addColorStop(0, 'rgba(52, 152, 219, 0.8)');
+    weightGradient.addColorStop(1, 'rgba(52, 152, 219, 0.2)');
+    
+    const chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: weeks,
@@ -124,37 +138,171 @@ function createTimelineChart() {
                     label: 'HbA1c (%)',
                     data: hba1cValues,
                     borderColor: '#e74c3c',
-                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                    tension: 0.3,
-                    yAxisID: 'y'
+                    backgroundColor: hba1cGradient,
+                    borderWidth: 3,
+                    tension: 0.4,
+                    yAxisID: 'y',
+                    pointBackgroundColor: '#e74c3c',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    fillOpacity: 0.3
                 },
                 {
                     label: 'Weight Loss (kg)',
-                    data: weightValues,
+                    data: weightLossValues,
                     borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    tension: 0.3,
-                    yAxisID: 'y1'
+                    backgroundColor: weightGradient,
+                    borderWidth: 3,
+                    tension: 0.4,
+                    yAxisID: 'y1',
+                    pointBackgroundColor: '#3498db',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    fillOpacity: 0.3
                 }
             ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             interaction: {
                 mode: 'index',
                 intersect: false,
             },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#667eea',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            const datasetLabel = context.dataset.label;
+                            const value = context.parsed.y;
+                            
+                            if (datasetLabel === 'HbA1c (%)') {
+                                let status = '';
+                                if (value <= 5.1) status = ' (Excellent!)';
+                                else if (value <= 5.7) status = ' (Good)';
+                                else if (value <= 6.4) status = ' (Pre-diabetic)';
+                                else status = ' (Diabetic)';
+                                
+                                return `${datasetLabel}: ${value}%${status}`;
+                            } else {
+                                const improvement = Math.abs(value);
+                                return `${datasetLabel}: ${value} kg (${improvement}kg total loss)`;
+                            }
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        hba1cTarget: {
+                            type: 'line',
+                            yMin: 5.1,
+                            yMax: 5.1,
+                            yScaleID: 'y',
+                            borderColor: '#27ae60',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            label: {
+                                content: 'Target HbA1c (5.1%)',
+                                enabled: true,
+                                position: 'start',
+                                backgroundColor: '#27ae60',
+                                color: '#fff',
+                                font: {
+                                    size: 10,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        preDiabeticThreshold: {
+                            type: 'line',
+                            yMin: 5.7,
+                            yMax: 5.7,
+                            yScaleID: 'y',
+                            borderColor: '#f39c12',
+                            borderWidth: 2,
+                            borderDash: [3, 3],
+                            label: {
+                                content: 'Pre-diabetic threshold',
+                                enabled: true,
+                                position: 'end',
+                                backgroundColor: '#f39c12',
+                                color: '#fff',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#4a5568',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
                 y: {
                     type: 'linear',
                     display: true,
                     position: 'left',
                     title: {
                         display: true,
-                        text: 'HbA1c (%)'
+                        text: 'HbA1c (%)',
+                        color: '#e74c3c',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
                     },
-                    min: 4.5,
-                    max: 6.5
+                    min: 4.8,
+                    max: 6.5,
+                    grid: {
+                        color: 'rgba(231, 76, 60, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#e74c3c',
+                        font: {
+                            weight: 'bold'
+                        },
+                        callback: function(value) {
+                            return value.toFixed(1) + '%';
+                        }
+                    }
                 },
                 y1: {
                     type: 'linear',
@@ -162,35 +310,58 @@ function createTimelineChart() {
                     position: 'right',
                     title: {
                         display: true,
-                        text: 'Weight Loss (kg)'
+                        text: 'Weight Loss (kg)',
+                        color: '#3498db',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
                     },
-                    min: 0,
-                    max: 10,
+                    min: -10,
+                    max: 1,
                     grid: {
-                        drawOnChartArea: false
+                        drawOnChartArea: false,
+                        color: 'rgba(52, 152, 219, 0.1)'
+                    },
+                    ticks: {
+                        color: '#3498db',
+                        font: {
+                            weight: 'bold'
+                        },
+                        callback: function(value) {
+                            return value + ' kg';
+                        }
                     }
                 }
             },
-             plugins: {
-        annotation: {
-            annotations: {
-                milestone1: {
-                    type: 'line',
-                    yMin: 5.1,
-                    yMax: 5.1,
-                    borderColor: 'red',
-                    borderWidth: 2,
-                    label: {
-                        content: 'Target HbA1c',
-                        enabled: true
-                    }
+            elements: {
+                point: {
+                    hoverBorderWidth: 3
                 }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
             }
         }
-    }
-        }
     });
+    
+    // Add milestone annotations for key weeks
+    const milestoneWeeks = {
+        'Week 8': 'Month 2: Plan Development Complete',
+        'Week 12': 'Q1: Major Improvement Milestone', 
+        'Week 24': 'Mid-Journey: Prediabetes Reversed',
+        'Week 32': 'Journey Complete: Target Achieved'
+    };
+    
+    // Animate chart on load
+    setTimeout(() => {
+        chart.update('active');
+    }, 500);
+    
+    return chart;
 }
+
 Chart.register(ChartAnnotation);
 function createSleepQualityChart() {
     const ctx = document.getElementById('sleepChart');
